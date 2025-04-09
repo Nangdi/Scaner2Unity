@@ -1,6 +1,7 @@
-using OpenCVForUnity.CoreModule;
+ï»¿using OpenCVForUnity.CoreModule;
 using OpenCVForUnity.ImgcodecsModule;
 using OpenCVForUnity.ImgprocModule;
+using OpenCVForUnity.PhotoModule;
 using OpenCVForUnity.UnityUtils;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,57 +33,57 @@ public class ImageAnalysis : MonoBehaviour
 
     public void ProcessAnalysis(Texture2D scannedTexture)
     {
+      
         Mat imageMat = new Mat(scannedTexture.height, scannedTexture.width, CvType.CV_8UC3);
         OpenCVForUnity.UnityUtils.Utils.texture2DToMat(scannedTexture, imageMat);
 
+        //ë§ˆì»¤ì˜ì—­ë§Œ ì¶”ì¶œí›„ ID ë°›ê¸°
         Texture2D markerImage = ExtractMarker(imageMat);
 
         int markerID = markerDetector.DetectMarker(markerImage);
        
         UnityEngine.Debug.Log("Detected markerID: " + markerID);
 
-        int boxSize = 1600; // 18cm * 100px
+        int boxSize = 1550; // 18cm * 100px
         int centerX = imageMat.cols() / 2;
         int centerY = imageMat.rows() / 2;
 
         int startX = centerX - boxSize / 2;
         int startY = centerY - boxSize / 2+50;
 
-        // ÁÂÇ¥°¡ À½¼ö°¡ µÇÁö ¾Êµµ·Ï Á¦ÇÑ
+        // ì¢Œí‘œê°€ ìŒìˆ˜ê°€ ë˜ì§€ ì•Šë„ë¡ ì œí•œ
         startX = Mathf.Max(startX, 0);
         startY = Mathf.Max(startY, 0);
 
-        // Àß¶ó³¾ ¹üÀ§ ¼³Á¤
+        // ì˜ë¼ë‚¼ ë²”ìœ„ ì„¤ì •
         OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(startX, startY, boxSize, boxSize);
         Mat drawingMat = new Mat(imageMat, cropRect);
 
-
-
-        //// 3. Áß¾Ó ±×¸²Æ² ÃßÃâ
-        //OpenCVForUnity.CoreModule.Rect drawRect = new OpenCVForUnity.CoreModule.Rect(0, detectRange, imageMat.cols(), imageMat.rows() - detectRange);
-        //Mat drawingMat = new Mat(imageMat, drawRect);
-
-        // ¿Ü°û¼± °¨Áö
-        Mat gray = new Mat();
-        Imgproc.cvtColor(drawingMat, gray, Imgproc.COLOR_BGR2GRAY);
-        Imgproc.GaussianBlur(gray, gray, new Size(5, 5), 0);
-        Mat edges = new Mat();
-        Imgproc.Canny(gray, edges, 100, 200);
-
-        // ¿Ü°û¼± ÀÌ¿Ü ¸¶½ºÅ· Ã³¸®
+        //ì™¸ê°ì„ (ê²€ì •ìƒ‰) ì œê±°í•˜ëŠ” ì½”ë“œ ì¶”ê°€í• ì˜ˆì •
+        Scalar lower = new Scalar(0, 0, 0);       // ì™„ì „ ê²€ì •
+        Scalar upper = new Scalar(30, 30, 30);    // ì–´ë‘ìš´ íšŒìƒ‰ê¹Œì§€ í¬í•¨
         Mat mask = new Mat();
-        Core.bitwise_not(edges, mask);
+        Core.inRange(drawingMat, lower, upper, mask); // â†’ ì™¸ê³½ì„  ìœ„ì¹˜ë§Œ í°ìƒ‰(255)
 
-        Mat coloredRegion = new Mat();
-        drawingMat.copyTo(coloredRegion, mask);
+        // âœ… 2. ì—¬ê¸°ì—ì„œ ë§ˆìŠ¤í¬ë¥¼ íŒ½ì°½ì‹œí‚µë‹ˆë‹¤ (ì–‡ì€ ì„ ë„ êµµê²Œ ê°ì§€)
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5));
+        Imgproc.dilate(mask, mask, kernel); // ìš”ê¸°!
 
-        // ÅØ½ºÃ³È­
-        resultTex = new Texture2D(coloredRegion.cols(), coloredRegion.rows(), TextureFormat.RGBA32, false);
-        OpenCVForUnity.UnityUtils.Utils.matToTexture2D(coloredRegion, resultTex);
-        Imgproc.resize(drawingMat, drawingMat, new Size(2048, 2048)); //  ÇØ»óµµ¸¸ ¸ÂÃã
+
+        // 2. ì£¼ë³€ í”½ì…€ë¡œ ì™¸ê³½ì„ ì„ ì§€ìš°ê³  ì±„ìš°ê¸°
+        Mat inpainted = new Mat();
+        Photo.inpaint(drawingMat, mask, inpainted, 5, Photo.INPAINT_TELEA); // ë°˜ê²½ 3, ì£¼ë³€ ìƒ‰ ë³´ê°„
+
+        // 3. ë§ˆë¬´ë¦¬ ë¸”ëŸ¬ë¡œ ë¶€ë“œëŸ½ê²Œ ì—°ê²°
+        Imgproc.GaussianBlur(inpainted, inpainted, new Size(3, 3), 0);
+
+        // í…ìŠ¤ì²˜í™”
+        resultTex = new Texture2D(inpainted.cols(), inpainted.rows(), TextureFormat.RGBA32, false);
+        OpenCVForUnity.UnityUtils.Utils.matToTexture2D(inpainted, resultTex);
+        Imgproc.resize(drawingMat, drawingMat, new Size(2048, 2048)); //  í•´ìƒë„ë§Œ ë§ì¶¤
         debugFrameDisplay.texture = resultTex;
 
-        // 4. ¿ÀºêÁ§Æ® ¼±ÅÃ ÈÄ ¸ÓÆ¼¸®¾ó Àû¿ë
+        // 4. ì˜¤ë¸Œì íŠ¸ ì„ íƒ í›„ ë¨¸í‹°ë¦¬ì–¼ ì ìš©
         GameObject go = null;
         if (markerID == 1) go = Instantiate(lightningPrefab);
         else if (markerID == 2) go = Instantiate(boxPrefab);
@@ -101,7 +102,7 @@ public class ImageAnalysis : MonoBehaviour
     private Texture2D ExtractMarker(Mat imageMat)
     {
 
-        // 2. »ó´Ü ¸¶Ä¿ ÀÎ½Ä (0,0) ±âÁØ 100x100
+        // 2. ìƒë‹¨ ë§ˆì»¤ ì¸ì‹ (0,0) ê¸°ì¤€ 100x100
         OpenCVForUnity.CoreModule.Rect shapeRect = new OpenCVForUnity.CoreModule.Rect(0, 0, detectRange, detectRange);
         Mat shapeROI = new Mat(imageMat, shapeRect);
 

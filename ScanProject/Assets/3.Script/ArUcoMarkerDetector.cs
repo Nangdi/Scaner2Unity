@@ -59,17 +59,5 @@ public class ArUcoMarkerDetector : MonoBehaviour
        
         return markerId;
     }
-    //private Texture2D ExtractMarker(Texture2D tex)
-    //{
-    //    Mat imageMat = new Mat(tex.height, tex.width, CvType.CV_8UC3);
-    //    OpenCVForUnity.UnityUtils.Utils.texture2DToMat(tex, imageMat);
 
-    //    // 2. 상단 마커 인식 (0,0) 기준 100x100
-    //    OpenCVForUnity.CoreModule.Rect shapeRect = new OpenCVForUnity.CoreModule.Rect(0, 0, detectRange, detectRange);
-    //    Mat shapeROI = new Mat(imageMat, shapeRect);
-
-    //    Texture2D marker = new Texture2D(shapeROI.cols(), shapeROI.rows(), TextureFormat.RGBA32, false);
-    //    Utils.matToTexture2D(shapeROI, marker);
-    //    return marker;
-    //}
 }
