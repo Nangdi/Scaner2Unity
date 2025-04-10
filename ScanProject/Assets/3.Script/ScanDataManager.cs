@@ -7,7 +7,14 @@ using UnityEngine;
 
 public class ScanDataManager : MonoBehaviour
 {
+    public enum Mode
+    {
+        Tuning,
+        Game
+    }
     private ImageAnalysis imageAnalysis;
+    [SerializeField]
+    private OffsetTuner offsetTuner;
 
     [Header("ScanFile감시")]
     private FileSystemWatcher watcher;
@@ -15,7 +22,7 @@ public class ScanDataManager : MonoBehaviour
     public Texture2D CurrentScanImage  { get; private set; }
     private string folderPath;
     private string filePath;
-
+    public Mode mode;
 
     void Awake()
     {
@@ -66,12 +73,21 @@ public class ScanDataManager : MonoBehaviour
             Debug.Log("시도: LoadImage 호출");
             CurrentScanImage.LoadImage(fileData); // 이미지 로드 (예외 발생 가능)
             Debug.Log("로드 성공");
+            //switch (mode)
+            //{
+            //    case Mode.Tuning:
+            //        offsetTuner.OffSetInit(CurrentScanImage);
+            //        break;
+            //    case Mode.Game:
+            //        imageAnalysis.ProcessAnalysis(CurrentScanImage);
+            //        break;
+            //}
             imageAnalysis.ProcessAnalysis(CurrentScanImage);
         }
         catch (Exception ex)
         {
             Debug.LogError("이미지 로드 실패: " + ex.Message);
         }
-       
+
     }
 }

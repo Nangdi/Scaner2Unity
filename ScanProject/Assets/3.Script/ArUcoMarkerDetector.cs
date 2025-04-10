@@ -11,6 +11,8 @@ using static OpenCVForUnityExample.ArUcoCreateMarkerExample;
 public class ArUcoMarkerDetector : MonoBehaviour
 {
     public RawImage debugMarkerDisplay; // 카메라 또는 이미지 출력용
+    public List<Mat> corners;
+    public Texture2D scannedTex;
     int markerId;
     void Start()
     {
@@ -19,6 +21,7 @@ public class ArUcoMarkerDetector : MonoBehaviour
     public int DetectMarker(Texture2D marker)
     {
         debugMarkerDisplay.texture = marker;
+        scannedTex = marker;
         // 1. 텍스처 → Mat
         Mat imgMat = new Mat(marker.height, marker.width, CvType.CV_8UC3);
         Utils.texture2DToMat(marker, imgMat);
@@ -31,7 +34,7 @@ public class ArUcoMarkerDetector : MonoBehaviour
         Dictionary dictionary = Aruco.getPredefinedDictionary(Aruco.DICT_4X4_50);
 
         // 4. 마커 검출
-        List<Mat> corners = new List<Mat>();
+        corners = new List<Mat>();
         Mat ids = new Mat();
         Aruco.detectMarkers(grayMat, dictionary, corners, ids);
         // 5. 결과 표시
@@ -55,8 +58,8 @@ public class ArUcoMarkerDetector : MonoBehaviour
         // 6. 결과를 텍스처로 표시
         Texture2D resultTex = new Texture2D(imgMat.cols(), imgMat.rows(), TextureFormat.RGBA32, false);
         Utils.matToTexture2D(imgMat, resultTex);
-       
-       
+
+
         return markerId;
     }
 
