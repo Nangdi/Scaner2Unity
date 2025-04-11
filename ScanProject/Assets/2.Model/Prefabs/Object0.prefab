@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4197867790004415888}
   - component: {fileID: 9051515663791425872}
   m_Layer: 0
-  m_Name: SharkV1
+  m_Name: Object0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -16,9 +16,9 @@ public class ImageAnalysis : MonoBehaviour
 {
     private ScanDataManager ScanDataManager;
     private ArUcoMarkerDetector markerDetector;
-    public GameObject lightningPrefab;
-    public GameObject boxPrefab;
 
+    public GameObject go;
+    private ObjectScanData obScanData;
     public RawImage debugFrameDisplay;
     public int detectRange = 400;
 
@@ -29,6 +29,7 @@ public class ImageAnalysis : MonoBehaviour
     {
         TryGetComponent(out ScanDataManager);
         TryGetComponent(out markerDetector);
+      
     }
 
     public void ProcessAnalysis(Texture2D scannedTexture)
@@ -40,19 +41,20 @@ public class ImageAnalysis : MonoBehaviour
         ////마커영역만 추출후 ID 받기
         //Texture2D markerImage = ExtractMarker(imageMat);
 
-        int markerID = markerDetector.DetectMarker(scannedTexture);
+        Mat perspectiveMat = markerDetector.DetectMarker(scannedTexture);
         double[] ptArr = markerDetector.corners[0].get(0, 0); // index 0 = 좌상단
         Point markerPoint = new Point(ptArr[0], ptArr[1]);
 
-        UnityEngine.Debug.Log("Detected markerID: " + markerID);
-
-        int boxSize = 1509; // 18cm * 100px
-        int centerX = imageMat.cols() / 2;
-        int centerY = imageMat.rows() / 2;
+        obScanData = JsonManager.jsonManager.LoadData()[markerDetector.markerId];
+        UnityEngine.Debug.Log("Detected markerID: " + markerDetector.markerId);
 
 
-        int startX = (int)markerPoint.x + 0;
-        int startY = (int)markerPoint.y + 396;
+
+        int boxSize = obScanData.cropSize;
+        
+
+        int startX = (int)markerPoint.x + obScanData.offsetX;
+        int startY = (int)markerPoint.y + obScanData.offsetY;
         //int startX = imageMat.cols() / 2 - boxSize / 2 + 13;
         //int startY = imageMat.rows() / 2 - boxSize / 2 + -47;
         // 좌표가 음수가 되지 않도록 제한
@@ -88,10 +90,7 @@ public class ImageAnalysis : MonoBehaviour
         debugFrameDisplay.texture = resultTex;
 
         // 4. 오브젝트 선택 후 머티리얼 적용
-        GameObject go = null;
-        if (markerID == 1) go = Instantiate(lightningPrefab);
-        else if (markerID == 2) go = Instantiate(boxPrefab);
-        else UnityEngine.Debug.LogWarning("Unknown shape, no object spawned.");
+        //GameObject go = JsonManager.jsonManager.objectList[obScanData.objectID];
 
         if (go != null)
         {
@@ -118,4 +117,5 @@ public class ImageAnalysis : MonoBehaviour
     {
         renderer.material.mainTexture = resultTex;
     }
+    
 }

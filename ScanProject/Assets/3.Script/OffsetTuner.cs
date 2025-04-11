@@ -9,6 +9,7 @@ using static UnityEngine.UI.GridLayoutGroup;
 using System.Collections.Generic;
 using UnityEngine.Timeline;
 using OpenCVForUnity.UnityUtils;
+using OpenCVForUnity.ImgcodecsModule;
 public class OffsetTuner : MonoBehaviour
 {
     [SerializeField]
@@ -17,13 +18,17 @@ public class OffsetTuner : MonoBehaviour
     [Header("Input")]
     public RawImage scannedImageDisplay;
     public Texture2D scannedTex;
+    public Texture2D UVmap;
 
     [Header("Offset Controls")]
     [Range(-840, 840)] public int offsetX = 0;
-    [Range(-1180, 1180)] public int offsetY = 242;
+    [Range(-1180, 1180)] public int offsetY = 0;
     [Range(-0, 2048)] public int cropSize = 1509;
-    private Texture2D cropTex;
+    private int startOffsetY = 300;
+    private int startOffsetX = 0;
     public GameObject ob;
+    private ObjectScanData objectData;
+    private Texture2D cropTex;
 
     [Header("Live Crop")]
     public RawImage CropDIsplay;
@@ -39,39 +44,24 @@ public class OffsetTuner : MonoBehaviour
 
     void Start()
     {
-       
+      
     }
+    
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            offsetY -= 1;
-        }
-        else if (Input.GetKey(KeyCode.UpArrow))
-        {
-            offsetY += 1;
-        }
-        else if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            offsetX -= 1;
-        }
-        else if (Input.GetKey(KeyCode.RightArrow))
-        {
-            offsetX += 1;
-        }
+
         if (!isTuningStart) return;
 
         // 마커 기준 crop 영역 계산
-        //int x = scannedMat.cols() / 2 - cropSize / 2 + offsetX;
-        //int y = scannedMat.rows() / 2 - cropSize / 2 + offsetY;
-        int x = (int)markerTopLeft.x + offsetX;
-        int y = (int)markerTopLeft.y + offsetY;
+        int x = (int)markerTopLeft.x + startOffsetX + offsetX;
+        int y = (int)markerTopLeft.y + startOffsetY + offsetY;
         if (x < 0 || y < 0 || x + cropSize > scannedMat.cols() || y + cropSize > scannedMat.rows())
         {
-            x = previousX;
-            y = previousY;
-        return;
+            offsetX = previousX - startOffsetX-(int)markerTopLeft.x;
+            offsetY = previousY - startOffsetY-(int)markerTopLeft.y;
+            cropSize = previousCropSize;
+            return;
         }
         if (previousX == x && previousY == y && cropSize == previousCropSize)
         {
@@ -84,13 +74,13 @@ public class OffsetTuner : MonoBehaviour
             previousCropSize = cropSize;
         }
 
-        Debug.Log("추출적용");
+        Debug.Log($"추출적용 시작좌표({x},{y})");
 
 
         // crop 영역 추출
         OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(x, y, cropSize, cropSize);
         Mat cropped = new Mat(scannedMat, cropRect);
-
+        
         cropTex = new Texture2D(cropped.cols(), cropped.rows(), TextureFormat.RGBA32, false);
         // 디버그용 미리보기
 
@@ -109,10 +99,16 @@ public class OffsetTuner : MonoBehaviour
 
 
     }
-    public void OffSetInit()
+    public void MarkerOffSetInit()
     {
         //arucoMarkerDetector.DetectMarker(scannedTex);
         scannedTex = arucoMarkerDetector.scannedTex;
+       
+        RoadData();
+       
+
+        Debug.Log($"markerID{arucoMarkerDetector.markerId}");
+        Debug.Log($"objectID{objectData.objectID}");
         double[] ptArr = arucoMarkerDetector.corners[0].get(0, 0); // index 0 = 좌상단
         markerTopLeft = new Point(ptArr[0], ptArr[1]);
         Debug.Log(markerTopLeft);
@@ -121,21 +117,6 @@ public class OffsetTuner : MonoBehaviour
         scannedImageDisplay.texture = scannedTex;
 
         isTuningStart = true;
-    }
-    void FlipTextureVertically(Texture2D tex)
-    {
-        var pixels = tex.GetPixels();
-        int width = tex.width;
-        int height = tex.height;
-
-        Color[] flipped = new Color[pixels.Length];
-        for (int y = 0; y < height; y++)
-        {
-            System.Array.Copy(pixels, y * width, flipped, (height - y - 1) * width, width);
-        }
-
-        tex.SetPixels(flipped);
-        tex.Apply();
     }
     public void ApplyMatarial()
     {
@@ -148,5 +129,39 @@ public class OffsetTuner : MonoBehaviour
             }
         }
     }
+    public void SaveData()
+    {
+        objectData.objectID = arucoMarkerDetector.markerId;
+        objectData.offsetX = offsetX;
+        objectData.offsetY -= offsetY;
+        objectData.cropSize = cropSize;
+        offsetX = 0;
+        offsetY = 0;
+        JsonManager.jsonManager.dataList[objectData.objectID] = objectData;
+        JsonManager.jsonManager.SaveData();
+    }
+    private void RoadData()
+    {
+        objectData = JsonManager.jsonManager.dataList[arucoMarkerDetector.markerId];
+        ob = JsonManager.jsonManager.objectList[objectData.objectID];
+        Debug.Log(objectData.offsetY);
 
+        startOffsetX = objectData.offsetX;
+        startOffsetY = objectData.offsetY;
+        cropSize = objectData.cropSize;
+        Debug.Log("데이터로드완료");
+    }
+    public void CaculateCropSize()
+    {
+        int width = UVmap.width;
+        int height = UVmap.height;
+
+        // 실수형으로 정확하게 계산
+        float dpi = 72f;
+        float mmPerInch = 25.4f;
+
+        float widthMM = (width / dpi) * mmPerInch;
+        float heightMM = (height / dpi) * mmPerInch;
+        Debug.Log($"width : {widthMM} , height : {heightMM}");
+    }
 }

@@ -65,8 +65,8 @@ public class ScanDataManager : MonoBehaviour
     private void LoadTexture(string path)
     {
     
-        try
-        {
+        //try
+        //{
             byte[] fileData = File.ReadAllBytes(path);
             Debug.Log("시도: Texture2D 생성");
             CurrentScanImage = new Texture2D(2, 2); // LoadImage가 사이즈 덮어씀
@@ -83,11 +83,11 @@ public class ScanDataManager : MonoBehaviour
             //        break;
             //}
             imageAnalysis.ProcessAnalysis(CurrentScanImage);
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError("이미지 로드 실패: " + ex.Message);
-        }
+        //}
+        //catch (Exception ex)
+        //{
+        //    Debug.LogError("이미지 로드 실패: " + ex.Message);
+        //}
 
     }
 }
