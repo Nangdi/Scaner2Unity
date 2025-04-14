@@ -48,7 +48,7 @@ public class ScanDataManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            string test = "C:\\Users\\Munser01\\Documents\\GitHub\\Scaner2Unity\\ScanProject\\Assets\\DataFiles\\20250404170800.jpg";
+            string test = "C:\\Users\\Munser01\\Documents\\GitHub\\Scaner2Unity\\ScanProject\\Assets\\DataFiles\\20250414164109.jpg";
             LoadTexture(test);
         }
       
