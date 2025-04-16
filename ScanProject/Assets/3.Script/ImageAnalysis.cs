@@ -3,6 +3,7 @@ using OpenCVForUnity.ImgcodecsModule;
 using OpenCVForUnity.ImgprocModule;
 using OpenCVForUnity.PhotoModule;
 using OpenCVForUnity.UnityUtils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,22 +15,20 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class ImageAnalysis : MonoBehaviour
 {
-    private ScanDataManager ScanDataManager;
-    private ArUcoMarkerDetector markerDetector;
+    [SerializeField]
+    protected ArUcoMarkerDetector arucoMarkerDetector;
 
     public GameObject go;
     private ObjectScanData obScanData;
-    public RawImage debugFrameDisplay;
-    public int detectRange = 400;
-
+    public RawImage debugImage;
     Renderer renderer;
     Texture2D resultTex;
-    private ScanInfo scanInfo;
+    protected Mat inputImage;
+    public DetectInfo detectInfo;
+    protected Mat perspectiveMat;
+    protected Point startPoint;
     private void Start()
     {
-        TryGetComponent(out ScanDataManager);
-        TryGetComponent(out markerDetector);
-      
     }
 
     //public void ProcessAnalysis(Texture2D scannedTexture)
@@ -101,35 +100,55 @@ public class ImageAnalysis : MonoBehaviour
     //        }
     //    }
     //}
-    public void ProcessAnalysis(Texture2D scannedTexture)
+    public virtual void ProcessAnalysis(Texture2D scannedTexture)
     {
-
+        //Tex ->Mat 변환
         Mat imageMat = new Mat(scannedTexture.height, scannedTexture.width, CvType.CV_8UC3);
         OpenCVForUnity.UnityUtils.Utils.texture2DToMat(scannedTexture, imageMat);
+        inputImage = imageMat;
 
-        ////마커영역만 추출후 ID 받기
-        //Texture2D markerImage = ExtractMarker(imageMat);
 
-        int markerID = markerDetector.DetectMarker(scannedTexture);
+        UnityEngine.Debug.Log(arucoMarkerDetector);
+        //scannedTexture Marker 정보 가져오기
+        detectInfo = arucoMarkerDetector.GetDetectInfo(imageMat);
         //Point markerPoint = scanInfo.standardOffset;
 
-        obScanData = JsonManager.jsonManager.LoadData()[markerDetector.markerId];
-        UnityEngine.Debug.Log("Detected markerID: " + markerDetector.markerId);
+        obScanData = JsonManager.jsonManager.LoadData()[detectInfo.markerId];
+        UnityEngine.Debug.Log("Detected markerID: " + detectInfo.markerId);
+
+        MatOfPoint2f markerCorners = new MatOfPoint2f(detectInfo.markerCorners[0]);
 
 
-        MatOfPoint2f markerCorners = new MatOfPoint2f(markerDetector.corners[0]);
+        //perspectiveMat = AlignImageByMarker(detectInfo.scanMat, markerCorners);
 
-
+        //detectInfo = arucoMarkerDetector.GetDetectInfo(perspectiveMat);
+        Point[] points = markerCorners.toArray();
+        startPoint = points[0]; // ← 바로 이게 좌측 상단
         int boxSize = obScanData.cropSize;
-        int startX = /*(int)markerPoint.x */ obScanData.offsetX;
-        int startY = /*(int)markerPoint.y */ obScanData.offsetY;
-        Mat test = markerDetector.CropFromPerspective(imageMat, markerCorners, startX, startY, boxSize);
-      
+        int startX = (int)Math.Round(startPoint.x) + obScanData.offsetX;
+        int startY = (int)Math.Round(startPoint.y) + obScanData.offsetY;
+
+        //crop하는기능
+        OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(startX, startY, boxSize, boxSize);
+        Mat cropped = new Mat(inputImage, cropRect);
+        ApplyTexture(cropped, debugImage);
+
+        Texture2D cropTex = new Texture2D(cropped.cols(), cropped.rows(), TextureFormat.RGBA32, false);
+
         // 텍스처화
-        resultTex = new Texture2D(test.cols(), test.rows(), TextureFormat.RGBA32, false);
-        OpenCVForUnity.UnityUtils.Utils.matToTexture2D(test, resultTex);
-        Imgproc.resize(test, test, new Size(2048, 2048)); //  해상도만 맞춤
-        debugFrameDisplay.texture = resultTex;
+    }
+
+    public void ApplyTexture(Mat mat ,RawImage debugDisplay = null)
+    {
+        resultTex = new Texture2D(mat.cols(), mat.rows(), TextureFormat.RGBA32, false);
+        OpenCVForUnity.UnityUtils.Utils.matToTexture2D(mat, resultTex);
+        //OpenCVForUnity.UnityUtils.Utils.matToTexture2D(mat, resultTex);
+        Imgproc.resize(mat, mat, new Size(2048, 2048)); //  해상도만 맞춤
+        if(debugDisplay != null)
+        {
+            debugDisplay.texture = resultTex;
+
+        }
 
         // 4. 오브젝트 선택 후 머티리얼 적용
         //GameObject go = JsonManager.jsonManager.objectList[obScanData.objectID];
@@ -143,21 +162,23 @@ public class ImageAnalysis : MonoBehaviour
             }
         }
     }
-
-    private Texture2D ExtractMarker(Mat imageMat)
+    public Mat AlignImageByMarker(Mat srcImg, MatOfPoint2f markerCorners)
     {
+        Point[] pts = markerCorners.toArray();
+        Point topLeft = pts[0];
+        Point topRight = pts[1];
 
-        // 2. 상단 마커 인식 (0,0) 기준 100x100
-        OpenCVForUnity.CoreModule.Rect shapeRect = new OpenCVForUnity.CoreModule.Rect(0, 0, detectRange, detectRange);
-        Mat shapeROI = new Mat(imageMat, shapeRect);
+        Point dir = new Point(topRight.x - topLeft.x, topRight.y - topLeft.y);
 
-        Texture2D marker = new Texture2D(shapeROI.cols(), shapeROI.rows(), TextureFormat.RGBA32, false);
-        OpenCVForUnity.UnityUtils.Utils.matToTexture2D(shapeROI, marker);
-        return marker;
+        double angleRad = Mathf.Atan2((float)dir.y, (float)dir.x);
+        double angleDeg = angleRad * (180.0 / Math.PI);
+
+        Point center = new Point(srcImg.cols() / 2, srcImg.rows() / 2);
+        Mat rotationMatrix = Imgproc.getRotationMatrix2D(center, -angleDeg, 1.0);
+
+        Mat aligned = new Mat();
+        Imgproc.warpAffine(srcImg, aligned, rotationMatrix, srcImg.size(), Imgproc.INTER_LINEAR, Core.BORDER_REPLICATE);
+
+        return aligned;
     }
-    private void SetPosition()
-    {
-        renderer.material.mainTexture = resultTex;
-    }
-    
 }

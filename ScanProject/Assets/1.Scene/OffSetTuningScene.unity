@@ -155,7 +155,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11d4328b8a289e6448681a76512c8db6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetTuner: {fileID: 0}
+  imageAnalysis: {fileID: 1014371578}
+  CurrentScanImage: {fileID: 0}
+  fileName: 20250416114352
   mode: 0
 --- !u!114 &123055566
 MonoBehaviour:
@@ -164,14 +166,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 123055564}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85d55ca0fdc741e488e1aed8b5ae8abd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arucoMarkerDetector: {fileID: 0}
   go: {fileID: 719123500}
-  debugFrameDisplay: {fileID: 313867313}
-  detectRange: 400
+  debugImage: {fileID: 0}
 --- !u!4 &123055567
 Transform:
   m_ObjectHideFlags: 0
@@ -199,8 +201,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9411e2ec0f35ad4a985a261fd4bb516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMarkerDisplay: {fileID: 4773981549156767039}
-  debugMarkerDisplay1: {fileID: 1356694929}
+  ScanImage: {fileID: 1356694929}
+  correctionImage: {fileID: 4773981549156767039}
   scannedTex: {fileID: 0}
   markerId: 0
 --- !u!114 &123055569
@@ -276,7 +278,7 @@ GameObject:
   - component: {fileID: 313867314}
   - component: {fileID: 313867313}
   m_Layer: 5
-  m_Name: debugFrameDisplay
+  m_Name: debugCropDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -553,7 +555,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1014371576}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: OffsetTuner, Assembly-CSharp
         m_MethodName: ApplyMatarial
         m_Mode: 1
@@ -769,7 +771,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1625189921524381913, guid: 69c559ac32adcf9469160d30ed90d370, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17.33
+      value: -17.12
       objectReference: {fileID: 0}
     - target: {fileID: 1625189921524381913, guid: 69c559ac32adcf9469160d30ed90d370, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1056,7 +1058,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1014371577}
-  - component: {fileID: 1014371576}
+  - component: {fileID: 1014371578}
   m_Layer: 0
   m_Name: OffsetTuner
   m_TagString: Untagged
@@ -1064,27 +1066,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1014371576
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1014371575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa64891bdd8b6d24fbbd4f12f2d416df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  arucoMarkerDetector: {fileID: 123055568}
-  scannedImageDisplay: {fileID: 1045349458}
-  scannedTex: {fileID: 2800000, guid: 56ed619de6ae62b418b5187687e147f4, type: 3}
-  UVmap: {fileID: 2800000, guid: c6d539e8ff7555046b3e43423820adb2, type: 3}
-  offsetX: 0
-  offsetY: 0
-  cropSize: 1509
-  ob: {fileID: 0}
-  CropDIsplay: {fileID: 313867313}
 --- !u!4 &1014371577
 Transform:
   m_ObjectHideFlags: 0
@@ -1100,78 +1081,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1045349456
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1045349457}
-  - component: {fileID: 1045349459}
-  - component: {fileID: 1045349458}
-  m_Layer: 5
-  m_Name: debugCrop
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1045349457
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1045349456}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1772326991}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 499, y: 193}
-  m_SizeDelta: {x: 500, y: 700}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1045349458
+--- !u!114 &1014371578
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1045349456}
+  m_GameObject: {fileID: 1014371575}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Script: {fileID: 11500000, guid: fa64891bdd8b6d24fbbd4f12f2d416df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Texture: {fileID: 0}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
---- !u!222 &1045349459
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1045349456}
-  m_CullTransparentMesh: 1
+  arucoMarkerDetector: {fileID: 123055568}
+  go: {fileID: 1765890105}
+  debugImage: {fileID: 4773981549156767039}
+  scannedTex: {fileID: 2800000, guid: 56ed619de6ae62b418b5187687e147f4, type: 3}
+  offsetX: 0
+  offsetY: 0
+  cropSize: 1509
+  CropDisplay: {fileID: 313867313}
 --- !u!1001 &1070584851
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1451,7 +1380,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1014371576}
+      - m_Target: {fileID: 1014371578}
         m_TargetAssemblyTypeName: OffsetTuner, Assembly-CSharp
         m_MethodName: SaveData
         m_Mode: 1
@@ -1513,7 +1442,7 @@ GameObject:
   - component: {fileID: 1356694930}
   - component: {fileID: 1356694929}
   m_Layer: 5
-  m_Name: debugMarkerDisplay (1)
+  m_Name: debugScanImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1558,7 +1487,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 56ed619de6ae62b418b5187687e147f4, type: 3}
+  m_Texture: {fileID: 0}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -1724,7 +1653,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1014371576}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: OffsetTuner, Assembly-CSharp
         m_MethodName: CaculateCropSize
         m_Mode: 1
@@ -1932,7 +1861,6 @@ RectTransform:
   m_Children:
   - {fileID: 2973068822923267125}
   - {fileID: 1356694928}
-  - {fileID: 1045349457}
   - {fileID: 313867312}
   - {fileID: 1892966852}
   - {fileID: 507448431}
@@ -2219,7 +2147,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1014371576}
+      - m_Target: {fileID: 1014371578}
         m_TargetAssemblyTypeName: OffsetTuner, Assembly-CSharp
         m_MethodName: MarkerOffSetInit
         m_Mode: 1
@@ -2308,7 +2236,7 @@ GameObject:
   - component: {fileID: 3296394480198292103}
   - component: {fileID: 4773981549156767039}
   m_Layer: 5
-  m_Name: debugMarkerDisplay
+  m_Name: debugCorrectionDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2334,7 +2262,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 56ed619de6ae62b418b5187687e147f4, type: 3}
+  m_Texture: {fileID: 0}
   m_UVRect:
     serializedVersion: 2
     x: 0

@@ -12,16 +12,17 @@ public class ScanDataManager : MonoBehaviour
         Tuning,
         Game
     }
-    private ImageAnalysis imageAnalysis;
     [SerializeField]
-    private OffsetTuner offsetTuner;
+    private ImageAnalysis imageAnalysis;
 
     [Header("ScanFile°¨½Ã")]
     private FileSystemWatcher watcher;
 
-    public Texture2D CurrentScanImage  { get; private set; }
+
+    public Texture2D CurrentScanImage ;
     private string folderPath;
     private string filePath;
+    public string fileName;
     public Mode mode;
 
     void Awake()
@@ -39,7 +40,6 @@ public class ScanDataManager : MonoBehaviour
     }
     private void Start()
     {
-        TryGetComponent(out imageAnalysis);
         watcher = new FileSystemWatcher(folderPath, "*.jpg");
         watcher.Created += OnNewScan;
         watcher.EnableRaisingEvents = true;
@@ -48,8 +48,13 @@ public class ScanDataManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            string test = "C:\\Users\\Munser01\\Documents\\GitHub\\Scaner2Unity\\ScanProject\\Assets\\DataFiles\\20250414164109.jpg";
-            LoadTexture(test);
+            string test = "C:\\Users\\Munser01\\Documents\\GitHub\\Scaner2Unity\\ScanProject\\Assets\\DataFiles\\";
+            LoadTexture(test+ fileName+".jpg");
+        }
+        else if(Input.GetKeyDown(KeyCode.W))
+        {
+            CurrentScanImage = new Texture2D(2, 2);
+            imageAnalysis.ProcessAnalysis(CurrentScanImage);
         }
       
     }
