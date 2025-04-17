@@ -28,7 +28,7 @@ public class ScanDataManager : MonoBehaviour
     void Awake()
     {
        
-        folderPath = Path.Combine(Application.dataPath, "DataFiles");
+        folderPath = Path.Combine(Application.streamingAssetsPath, "DataFiles");
 
         // 폴더가 없으면 생성
         if (!Directory.Exists(folderPath))
@@ -48,7 +48,7 @@ public class ScanDataManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            string test = "C:\\Users\\Munser01\\Documents\\GitHub\\Scaner2Unity\\ScanProject\\Assets\\DataFiles\\";
+            string test = "C:\\Users\\Munser01\\Documents\\GitHub\\Scaner2Unity\\ScanProject\\Assets\\StreamingAssets\\DataFiles\\";
             LoadTexture(test+ fileName+".jpg");
         }
         else if(Input.GetKeyDown(KeyCode.W))
