@@ -124,13 +124,13 @@ public class OffsetTuner : ImageAnalysis
         objectData.cropSize = cropSize;
         offsetX = 0;
         offsetY = 0;
-        JsonManager.jsonManager.dataList[objectData.objectID] = objectData;
-        JsonManager.jsonManager.SaveData();
+        CustomJsonManager.jsonManager.dataList[objectData.objectID] = objectData;
+        CustomJsonManager.jsonManager.SaveScanData();
     }
     private void RoadData()
     {
-        objectData = JsonManager.jsonManager.dataList[arucoMarkerDetector.markerId];
-        go = JsonManager.jsonManager.objectList[objectData.objectID];
+        objectData = CustomJsonManager.jsonManager.dataList[arucoMarkerDetector.markerId];
+        go = CustomJsonManager.jsonManager.objectList[objectData.objectID];
         Debug.Log(objectData.offsetY);
 
         startOffsetX = objectData.offsetX;

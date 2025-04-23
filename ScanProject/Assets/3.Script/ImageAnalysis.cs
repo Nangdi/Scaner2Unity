@@ -113,7 +113,7 @@ public class ImageAnalysis : MonoBehaviour
         detectInfo = arucoMarkerDetector.GetDetectInfo(imageMat);
         //Point markerPoint = scanInfo.standardOffset;
 
-        obScanData = JsonManager.jsonManager.LoadData()[detectInfo.markerId];
+        obScanData = CustomJsonManager.jsonManager.dataList[detectInfo.markerId];
         UnityEngine.Debug.Log("Detected markerID: " + detectInfo.markerId);
 
         MatOfPoint2f markerCorners = new MatOfPoint2f(detectInfo.markerCorners[0]);

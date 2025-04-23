@@ -1,19 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Ports;
 using System.Threading;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Windows;
-
 public class SerialPortManager : MonoBehaviour
 {
     public static SerialPortManager Instance { get; private set; }
 
-    SerialPort serialPort = new SerialPort("COM3", 19200, Parity.None, 8, StopBits.One);
+    PortJson portJson;
+
+    SerialPort serialPort;
     private CancellationTokenSource cancellationTokenSource; // CancellationTokenSource 추가
-    private void Awake()
+    protected virtual void Awake()
     {
         if (Instance == null)
         {
@@ -25,16 +26,21 @@ public class SerialPortManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        portJson = CustomJsonManager.jsonManager.LoadPortData();
+        Debug.Log($"포트 데이터 로드됨: COM={portJson.com}, Baud={portJson.baudLate}");
+        serialPort = new SerialPort(portJson.com, portJson.baudLate, Parity.None, 8, StopBits.One);
     }
-    void Start()
+    protected virtual void Start()
     {
         // 포트 열기
-
+       
         Debug.Log("포트연결시도");
         //serialPort.ReadTimeout = 500;
         serialPort.Open();
         if (serialPort.IsOpen)
         {
+
+            Debug.Log("연결완료");
             StartSerialPortReader();
         }
     }
@@ -62,6 +68,7 @@ public class SerialPortManager : MonoBehaviour
                 if (!string.IsNullOrEmpty(data) && data.Length >= 3)
                 {
                     Debug.Log("받은데이터 : " + data);
+                    ReceivedData(data);
                 }
 
             }
@@ -99,15 +106,16 @@ public class SerialPortManager : MonoBehaviour
             int index = input.IndexOf("80");
             if (index + 3 < input.Length)
             {
-            // "80" 다음 문자까지 포함하여 자르기    
-            //Debug.Log(data.Substring(index, 3));
-            return input.Substring(index  , 4);
+                // "80" 다음 문자까지 포함하여 자르기
+                // 또는 0D 헥사코드로 구분하기
+                //Debug.Log(data.Substring(index, 3));
+                return input.Substring(index  , 4);
             }
         }
         return "";
     }
-    //현재프로젝트에선 사용안함
-    public void SendData(string message)
+
+    protected void SendData(string message)
     {
         if (serialPort.IsOpen)
         {
@@ -150,6 +158,7 @@ public class SerialPortManager : MonoBehaviour
 
     }
 
-        
+
+
 
 }
