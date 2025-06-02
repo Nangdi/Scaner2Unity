@@ -175,6 +175,7 @@ MonoBehaviour:
   arucoMarkerDetector: {fileID: 0}
   go: {fileID: 719123500}
   debugImage: {fileID: 0}
+  isOutlineEnabled: 1
 --- !u!4 &123055567
 Transform:
   m_ObjectHideFlags: 0
@@ -1248,6 +1249,7 @@ MonoBehaviour:
   arucoMarkerDetector: {fileID: 123055568}
   go: {fileID: 1765890105}
   debugImage: {fileID: 4773981549156767039}
+  isOutlineEnabled: 1
   scannedTex: {fileID: 2800000, guid: 56ed619de6ae62b418b5187687e147f4, type: 3}
   offsetX: 0
   offsetY: 0

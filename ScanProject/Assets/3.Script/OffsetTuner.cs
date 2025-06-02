@@ -12,7 +12,7 @@ using OpenCvSharp.Demo;
 using System;
 public class OffsetTuner : ImageAnalysis 
 {
-
+    
     [Header("Input")]
     public Texture2D scannedTex;
 

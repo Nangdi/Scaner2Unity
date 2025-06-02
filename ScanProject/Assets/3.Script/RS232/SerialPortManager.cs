@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
+
 public class SerialPortManager : MonoBehaviour
 {
     public static SerialPortManager Instance { get; private set; }
@@ -26,14 +27,14 @@ public class SerialPortManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        portJson = CustomJsonManager.jsonManager.LoadPortData();
-        Debug.Log($"포트 데이터 로드됨: COM={portJson.com}, Baud={portJson.baudLate}");
-        serialPort = new SerialPort(portJson.com, portJson.baudLate, Parity.None, 8, StopBits.One);
+       
     }
     protected virtual void Start()
     {
         // 포트 열기
-       
+        portJson = CustomJsonManager.jsonManager.LoadPortData();
+        Debug.Log($"포트 데이터 로드됨: COM={portJson.com}, Baud={portJson.baudLate}");
+        serialPort = new SerialPort(portJson.com, portJson.baudLate, Parity.None, 8, StopBits.One);
         Debug.Log("포트연결시도");
         //serialPort.ReadTimeout = 500;
         serialPort.Open();

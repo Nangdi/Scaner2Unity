@@ -11,7 +11,7 @@ public class Example
 
 public class JsonManager : MonoBehaviour
 {
-
+    string portPath;
     //저장할 json 객체 , 경로설정
     protected void SaveData<T>(T jsonObject, string path)
     {
@@ -34,6 +34,9 @@ public class JsonManager : MonoBehaviour
         return jsonData;
     }
     //예시 실행코드
+    //wrapper = JsonClass
+    //filePath = Json 경로
+    //
     //public void SaveScanData()
     //{
     //    DataWrapper wrapper = new DataWrapper { objectDatas = dataList };
@@ -44,4 +47,5 @@ public class JsonManager : MonoBehaviour
     //    DataWrapper wrapper = LoadData<DataWrapper>(filePath, SaveScanData);
     //    return wrapper.objectDatas;
     //}
+
 }

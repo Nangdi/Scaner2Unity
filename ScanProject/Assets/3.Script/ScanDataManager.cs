@@ -24,6 +24,7 @@ public class ScanDataManager : MonoBehaviour
     private string filePath;
     public string fileName;
     public Mode mode;
+    
 
     void Awake()
     {
