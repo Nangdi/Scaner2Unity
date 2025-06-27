@@ -11,6 +11,7 @@ public class ObjectScanData
     public int startOffset;
     public int offsetX;
     public int offsetY;
+    public float hRatio;
 }
 [Serializable]
 public class PortJson
@@ -53,8 +54,9 @@ public class CustomJsonManager : JsonManager
         DataInit();
         filePath = Path.Combine(Application.persistentDataPath, "objectData.json");
         portPath = Path.Combine(Application.streamingAssetsPath, "port.json");
+        //SaveScanData();
         dataList = LoadData();
-        //스캔데이타 JOSN 로드 오류 해결해야함
+        
     }
 
 
@@ -63,9 +65,10 @@ public class CustomJsonManager : JsonManager
     {
         dataList = new List<ObjectScanData>()
         {
-            new ObjectScanData { objectID = 0, cropSize = 1509, startOffset = 0, offsetX = 0, offsetY = 300 },
-            new ObjectScanData { objectID = 1, cropSize = 1550, startOffset = 0, offsetX = 0, offsetY = 300 },
-            new ObjectScanData { objectID = 2, cropSize = 1550, startOffset = 0, offsetX = 0, offsetY = 300 }
+            new ObjectScanData { objectID = 0, cropSize = 1509, startOffset = 0, offsetX = 0, offsetY = 300, hRatio =1f},
+            new ObjectScanData { objectID = 1, cropSize = 1550, startOffset = 0, offsetX = 0, offsetY = 300, hRatio =1f},
+            new ObjectScanData { objectID = 2, cropSize = 1550, startOffset = 0, offsetX = 0, offsetY = 300, hRatio =1f},
+            new ObjectScanData { objectID = 3, cropSize = 367, startOffset = 0, offsetX = 478, offsetY = 0, hRatio = 3.12f}
         };
 
     }

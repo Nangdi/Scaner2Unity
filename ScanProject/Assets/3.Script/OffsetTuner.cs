@@ -20,6 +20,7 @@ public class OffsetTuner : ImageAnalysis
     [Range(-840, 840)] public int offsetX = 0;
     [Range(-1180, 1180)] public int offsetY = 0;
     [Range(-0, 2048)] public int cropSize = 1509;
+     public float hRatio = 1.5f;
     private int startOffsetY = 300;
     private int startOffsetX = 0;
     private ObjectScanData objectData;
@@ -35,6 +36,10 @@ public class OffsetTuner : ImageAnalysis
     private int previousX;
     private int previousY;
     private int previousCropSize;
+    private int previouslowerValue = 0;
+    private int previousUpperValue = 50;
+    private int previouskernelValue = 4;
+    private int previousLerpValue = 3;
     private bool isTrigger;
 
     void Start()
@@ -48,17 +53,22 @@ public class OffsetTuner : ImageAnalysis
 
         if (!isTuningStart) return;
 
+        //UpdateCropView();
+        UpdateNameCropView();
+    }
+    private void UpdateCropView()
+    {
         // 마커 기준 crop 영역 계산
         int x = (int)Math.Round(startPoint.x) + objectData.offsetX + offsetX;
         int y = (int)Math.Round(startPoint.y) + objectData.offsetY + offsetY;
         if (x < 0 || y < 0 || x + cropSize > scannedMat.cols() || y + cropSize > scannedMat.rows())
         {
-            offsetX = previousX - objectData.startOffset- (int)Math.Round(startPoint.x);
-            offsetY = previousY - objectData.startOffset- (int)Math.Round(startPoint.y);
+            offsetX = previousX - objectData.startOffset - (int)Math.Round(startPoint.x);
+            offsetY = previousY - objectData.startOffset - (int)Math.Round(startPoint.y);
             cropSize = previousCropSize;
             return;
         }
-        if (previousX == x && previousY == y && cropSize == previousCropSize)
+        if (!ChangedValue(x, y))
         {
             return;
         }
@@ -67,33 +77,103 @@ public class OffsetTuner : ImageAnalysis
             previousX = x;
             previousY = y;
             previousCropSize = cropSize;
+            previouslowerValue = lowerValue;
+            previousUpperValue = UpperValue;
+            previouskernelValue = kernelValue;
+            previousLerpValue = LerpValue;
         }
         Debug.Log($"추출적용 시작좌표({(int)Math.Round(startPoint.x)},{(int)Math.Round(startPoint.y)})");
         Debug.Log($"추출적용 시작좌표({x},{y})");
 
 
         // crop 영역 추출
-        OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(x, y, cropSize, cropSize);
+        //600 50  300 150
+        float cropY = cropSize / hRatio;
+     
+        OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(x, y, cropSize, (int)cropY);
         Mat cropped = new Mat(scannedMat, cropRect);
-        
+
+        //if (!isOutlineEnabled)
+        //{
+        //    cropped = RemoveOutline(cropped);
+        //}
+
         cropTex = new Texture2D(cropped.cols(), cropped.rows(), TextureFormat.RGBA32, false);
         // 디버그용 미리보기
 
         Utils.matToTexture2D(cropped, cropTex);
-        Utils.matToTexture2D(cropped, cropTex);
+        //Utils.matToTexture2D(cropped, cropTex);
         if (!isTrigger)
         {
             isTrigger = true;
         }
         else
         {
-           
+
 
         }
         CropDisplay.texture = cropTex;
-        ApplyMatarial();
+        ApplyMaterial();
+    }
+    private void UpdateNameCropView()
+    {
+        // 마커 기준 crop 영역 계산
+        int x = (int)Math.Round(startPoint.x) + objectData.offsetX + offsetX;
+        int y = (int)Math.Round(startPoint.y) + objectData.offsetY + offsetY;
+        if (x < 0 || y < 0 || x + cropSize > scannedMat.cols() || y + cropSize > scannedMat.rows())
+        {
+            offsetX = previousX - objectData.startOffset - (int)Math.Round(startPoint.x);
+            offsetY = previousY - objectData.startOffset - (int)Math.Round(startPoint.y);
+            cropSize = previousCropSize;
+            return;
+        }
+        if (!ChangedValue(x, y))
+        {
+            return;
+        }
+        else
+        {
+            previousX = x;
+            previousY = y;
+            previousCropSize = cropSize;
+            previouslowerValue = lowerValue;
+            previousUpperValue = UpperValue;
+            previouskernelValue = kernelValue;
+            previousLerpValue = LerpValue;
+        }
+        Debug.Log($"추출적용 시작좌표({(int)Math.Round(startPoint.x)},{(int)Math.Round(startPoint.y)})");
+        Debug.Log($"추출적용 시작좌표({x},{y})");
 
 
+        // crop 영역 추출
+        //600 50  300 150
+        float cropY = cropSize / hRatio;
+        Debug.Log(cropY + " : cropY값");
+
+        OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(x, y, cropSize, (int)cropY);
+        Mat cropped = new Mat(scannedMat, cropRect);
+
+        if (!isOutlineEnabled)
+        {
+            cropped = RemoveOutline(cropped);
+        }
+
+        cropTex = new Texture2D(cropped.cols(), cropped.rows(), TextureFormat.RGBA32, false);
+        // 디버그용 미리보기
+
+        Utils.matToTexture2D(cropped, cropTex);
+        //Utils.matToTexture2D(cropped, cropTex);
+        if (!isTrigger)
+        {
+            isTrigger = true;
+        }
+        else
+        {
+
+
+        }
+        CropDisplay.texture = cropTex;
+        ApplyMaterial();
     }
     public void MarkerOffSetInit()
     {
@@ -105,7 +185,7 @@ public class OffsetTuner : ImageAnalysis
 
         isTuningStart = true;
     }
-    public void ApplyMatarial()
+    public void ApplyMaterial()
     {
         if (go != null)
         {
@@ -118,10 +198,11 @@ public class OffsetTuner : ImageAnalysis
     }
     public void SaveData()
     {
-        objectData.objectID = arucoMarkerDetector.markerId;
+        //objectData.objectID = arucoMarkerDetector.markerId;
         objectData.offsetX = offsetX;
         objectData.offsetY -= offsetY;
         objectData.cropSize = cropSize;
+        objectData.hRatio = hRatio;
         offsetX = 0;
         offsetY = 0;
         CustomJsonManager.jsonManager.dataList[objectData.objectID] = objectData;
@@ -136,6 +217,16 @@ public class OffsetTuner : ImageAnalysis
         startOffsetX = objectData.offsetX;
         startOffsetY = objectData.offsetY;
         cropSize = objectData.cropSize;
+        hRatio = objectData.hRatio;
         Debug.Log("데이터로드완료");
+    }
+    private bool ChangedValue(int x , int y)
+    {
+        if (previousX == x && previousY == y && cropSize == previousCropSize && previouslowerValue == lowerValue && previousUpperValue == UpperValue &&
+           previouskernelValue == kernelValue && previousLerpValue == LerpValue)
+        {
+            return false;
+        }
+        return true;
     }
 }
