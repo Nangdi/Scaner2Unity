@@ -52,11 +52,9 @@ public class ObjectSpawner : MonoBehaviour
         if (ob != null)
         {
             renderer = ob.GetComponent<Renderer>();
-                Debug.Log("텍스쳐입히기1 ");
-            if (GetComponent<Renderer>() != null)
+            if (renderer != null)
             {
-                GetComponent<Renderer>().material.mainTexture = resultTex;
-                Debug.Log("텍스쳐입히기2 ");
+                renderer.material.mainTexture = resultTex;
             }
         }
     }
