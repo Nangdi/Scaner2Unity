@@ -21,7 +21,7 @@ public class ImageAnalysis : MonoBehaviour
     [SerializeField]
     protected ArUcoMarkerDetector arucoMarkerDetector;
 
-    public NameTagManager nameTagManager;
+    public ObjectSpawner objectSpawner;
 
     public GameObject go;
     private ObjectScanData obScanData;
@@ -30,14 +30,14 @@ public class ImageAnalysis : MonoBehaviour
     Texture2D resultTex;
     protected Mat inputImage;
     public DetectInfo detectInfo;
-    protected Mat perspectiveMat;
     protected Point startPoint;
     public bool isOutlineEnabled = false;
+    public bool isCropName;
     [Header("SettingVelue")]
     public int lowerValue =0; 
     public int UpperValue =50; 
     public int kernelValue =4; 
-    public int LerpValue =3; 
+    public int LerpValue =3;
     private void Start()
     {
     }
@@ -67,18 +67,31 @@ public class ImageAnalysis : MonoBehaviour
         Mat cropped = CroppedImage(markerCorners, obScanData);
         Mat nameTagMat = CroppedImage(markerCorners, nameInfoData);
 
-        //애를 nameTagManager로 전달
+        objectSpawner.drawingAreaMat = cropped;
+        objectSpawner.nameAreaMat = nameTagMat;
+        objectSpawner.currentScanData = obScanData;
 
-        if (!isOutlineEnabled)
-        {
-            cropped = RemoveOutline(cropped);
-        }
+        objectSpawner.CreatObject();
 
-        ApplyTexture(cropped, debugImage);
-        Texture2D cropTex = new Texture2D(cropped.cols(), cropped.rows(), TextureFormat.RGBA32, false);
-        Texture2D nameTagTex = new Texture2D(nameTagMat.cols(), nameTagMat.rows(), TextureFormat.RGBA32, false);
-        OpenCVForUnity.UnityUtils.Utils.matToTexture2D(nameTagMat, nameTagTex);
-        nameTagManager.test.texture = nameTagTex;
+        ////애를 nameTagManager로 전달
+        //if (isCropName)
+        //{
+        //    ApplyTexture(nameTagMat, debugImage);
+        //}
+        //else
+        //{
+        //    if (!isOutlineEnabled)
+        //    {
+        //        cropped = RemoveOutline(cropped);
+        //    }
+        //ApplyTexture(cropped, debugImage);
+        //}
+
+
+        //Texture2D cropTex = new Texture2D(cropped.cols(), cropped.rows(), TextureFormat.RGBA32, false);
+        //Texture2D nameTagTex = new Texture2D(nameTagMat.cols(), nameTagMat.rows(), TextureFormat.RGBA32, false);
+        //OpenCVForUnity.UnityUtils.Utils.matToTexture2D(nameTagMat, nameTagTex);
+        //nameTagManager.test.texture = nameTagTex;
 
         // 텍스처화
     }
@@ -111,11 +124,12 @@ public class ImageAnalysis : MonoBehaviour
         }
 
         // 4. 오브젝트 선택 후 머티리얼 적용
-        //GameObject go = JsonManager.jsonManager.objectList[obScanData.objectID];
+        GameObject go = CustomJsonManager.jsonManager.objectList[obScanData.objectID];
 
-        if (go != null)
+        GameObject ob = Instantiate(go);
+        if (ob != null)
         {
-            renderer = go.GetComponent<Renderer>();
+            renderer = ob.GetComponent<Renderer>();
             if (renderer != null)
             {
                 renderer.material.mainTexture = resultTex;
@@ -144,5 +158,8 @@ public class ImageAnalysis : MonoBehaviour
         Imgproc.GaussianBlur(inpainted, inpainted, new Size(3, 3), 0);
 
         return inpainted;
+    }
+    private void InstantiateName(Mat name)
+    {
     }
 }

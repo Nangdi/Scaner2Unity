@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NameTagManager : MonoBehaviour
+public class NameTagController : MonoBehaviour
 {
-    public Texture2D nameTex;
+    public Transform targetHeadPos;
     public RawImage test;
 }

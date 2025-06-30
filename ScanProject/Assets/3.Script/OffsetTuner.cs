@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using OpenCVForUnity.CoreModule;
 using OpenCVForUnity.ImgprocModule;
@@ -29,7 +29,7 @@ public class OffsetTuner : ImageAnalysis
     [Header("Live Crop")]
     public RawImage CropDisplay;
     private Mat scannedMat;
-    private Point markerTopLeft = new Point(0,0); // ¸¶Ä¿ ÁÂ»ó´Ü (ÀÓ½Ã°ª)
+    private Point markerTopLeft = new Point(0,0); // ë§ˆì»¤ ì¢Œìƒë‹¨ (ì„ì‹œê°’)
 
     private bool isTuningStart;
     
@@ -40,6 +40,7 @@ public class OffsetTuner : ImageAnalysis
     private int previousUpperValue = 50;
     private int previouskernelValue = 4;
     private int previousLerpValue = 3;
+    private float previousHRatio = 1;
     private bool isTrigger;
 
     void Start()
@@ -53,12 +54,11 @@ public class OffsetTuner : ImageAnalysis
 
         if (!isTuningStart) return;
 
-        //UpdateCropView();
-        UpdateNameCropView();
+        UpdateCropView();
     }
     private void UpdateCropView()
     {
-        // ¸¶Ä¿ ±âÁØ crop ¿µ¿ª °è»ê
+        // ë§ˆì»¤ ê¸°ì¤€ crop ì˜ì—­ ê³„ì‚°
         int x = (int)Math.Round(startPoint.x) + objectData.offsetX + offsetX;
         int y = (int)Math.Round(startPoint.y) + objectData.offsetY + offsetY;
         if (x < 0 || y < 0 || x + cropSize > scannedMat.cols() || y + cropSize > scannedMat.rows())
@@ -74,107 +74,32 @@ public class OffsetTuner : ImageAnalysis
         }
         else
         {
-            previousX = x;
-            previousY = y;
-            previousCropSize = cropSize;
-            previouslowerValue = lowerValue;
-            previousUpperValue = UpperValue;
-            previouskernelValue = kernelValue;
-            previousLerpValue = LerpValue;
+            CashingData(x ,y );
         }
-        Debug.Log($"ÃßÃâÀû¿ë ½ÃÀÛÁÂÇ¥({(int)Math.Round(startPoint.x)},{(int)Math.Round(startPoint.y)})");
-        Debug.Log($"ÃßÃâÀû¿ë ½ÃÀÛÁÂÇ¥({x},{y})");
+        Debug.Log($"ì¶”ì¶œì ìš© ì‹œì‘ì¢Œí‘œ({(int)Math.Round(startPoint.x)},{(int)Math.Round(startPoint.y)})");
+        Debug.Log($"ì¶”ì¶œì ìš© ì‹œì‘ì¢Œí‘œ({x},{y})");
 
 
-        // crop ¿µ¿ª ÃßÃâ
+        // crop ì˜ì—­ ì¶”ì¶œ
         //600 50  300 150
         float cropY = cropSize / hRatio;
      
         OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(x, y, cropSize, (int)cropY);
         Mat cropped = new Mat(scannedMat, cropRect);
 
-        //if (!isOutlineEnabled)
-        //{
-        //    cropped = RemoveOutline(cropped);
-        //}
 
         cropTex = new Texture2D(cropped.cols(), cropped.rows(), TextureFormat.RGBA32, false);
-        // µğ¹ö±×¿ë ¹Ì¸®º¸±â
+        // ë””ë²„ê·¸ìš© ë¯¸ë¦¬ë³´ê¸°
 
         Utils.matToTexture2D(cropped, cropTex);
         //Utils.matToTexture2D(cropped, cropTex);
-        if (!isTrigger)
-        {
-            isTrigger = true;
-        }
-        else
-        {
 
-
-        }
         CropDisplay.texture = cropTex;
+        Core.flip(cropped, cropped, 0); // Xì¶• ê¸°ì¤€ ì¢Œìš° ë°˜ì „
         ApplyMaterial();
     }
-    private void UpdateNameCropView()
-    {
-        // ¸¶Ä¿ ±âÁØ crop ¿µ¿ª °è»ê
-        int x = (int)Math.Round(startPoint.x) + objectData.offsetX + offsetX;
-        int y = (int)Math.Round(startPoint.y) + objectData.offsetY + offsetY;
-        if (x < 0 || y < 0 || x + cropSize > scannedMat.cols() || y + cropSize > scannedMat.rows())
-        {
-            offsetX = previousX - objectData.startOffset - (int)Math.Round(startPoint.x);
-            offsetY = previousY - objectData.startOffset - (int)Math.Round(startPoint.y);
-            cropSize = previousCropSize;
-            return;
-        }
-        if (!ChangedValue(x, y))
-        {
-            return;
-        }
-        else
-        {
-            previousX = x;
-            previousY = y;
-            previousCropSize = cropSize;
-            previouslowerValue = lowerValue;
-            previousUpperValue = UpperValue;
-            previouskernelValue = kernelValue;
-            previousLerpValue = LerpValue;
-        }
-        Debug.Log($"ÃßÃâÀû¿ë ½ÃÀÛÁÂÇ¥({(int)Math.Round(startPoint.x)},{(int)Math.Round(startPoint.y)})");
-        Debug.Log($"ÃßÃâÀû¿ë ½ÃÀÛÁÂÇ¥({x},{y})");
+   
 
-
-        // crop ¿µ¿ª ÃßÃâ
-        //600 50  300 150
-        float cropY = cropSize / hRatio;
-        Debug.Log(cropY + " : cropY°ª");
-
-        OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(x, y, cropSize, (int)cropY);
-        Mat cropped = new Mat(scannedMat, cropRect);
-
-        if (!isOutlineEnabled)
-        {
-            cropped = RemoveOutline(cropped);
-        }
-
-        cropTex = new Texture2D(cropped.cols(), cropped.rows(), TextureFormat.RGBA32, false);
-        // µğ¹ö±×¿ë ¹Ì¸®º¸±â
-
-        Utils.matToTexture2D(cropped, cropTex);
-        //Utils.matToTexture2D(cropped, cropTex);
-        if (!isTrigger)
-        {
-            isTrigger = true;
-        }
-        else
-        {
-
-
-        }
-        CropDisplay.texture = cropTex;
-        ApplyMaterial();
-    }
     public void MarkerOffSetInit()
     {
         //arucoMarkerDetector.GetDetectInfo();
@@ -200,7 +125,7 @@ public class OffsetTuner : ImageAnalysis
     {
         //objectData.objectID = arucoMarkerDetector.markerId;
         objectData.offsetX = offsetX;
-        objectData.offsetY -= offsetY;
+        objectData.offsetY += offsetY;
         objectData.cropSize = cropSize;
         objectData.hRatio = hRatio;
         offsetX = 0;
@@ -211,6 +136,11 @@ public class OffsetTuner : ImageAnalysis
     private void RoadData()
     {
         objectData = CustomJsonManager.jsonManager.dataList[arucoMarkerDetector.markerId];
+        if (isCropName)
+        {
+        objectData = CustomJsonManager.jsonManager.dataList[3];
+
+        }
         go = CustomJsonManager.jsonManager.objectList[objectData.objectID];
         Debug.Log(objectData.offsetY);
 
@@ -218,15 +148,26 @@ public class OffsetTuner : ImageAnalysis
         startOffsetY = objectData.offsetY;
         cropSize = objectData.cropSize;
         hRatio = objectData.hRatio;
-        Debug.Log("µ¥ÀÌÅÍ·Îµå¿Ï·á");
+        Debug.Log("ë°ì´í„°ë¡œë“œì™„ë£Œ");
     }
     private bool ChangedValue(int x , int y)
     {
         if (previousX == x && previousY == y && cropSize == previousCropSize && previouslowerValue == lowerValue && previousUpperValue == UpperValue &&
-           previouskernelValue == kernelValue && previousLerpValue == LerpValue)
+           previouskernelValue == kernelValue && previousLerpValue == LerpValue && Mathf.Approximately(previousHRatio , hRatio))
         {
             return false;
         }
         return true;
+    }
+    private void CashingData(int x , int y )
+    {
+        previousX = x;
+        previousY = y;
+        previousCropSize = cropSize;
+        previouslowerValue = lowerValue;
+        previousUpperValue = UpperValue;
+        previouskernelValue = kernelValue;
+        previousLerpValue = LerpValue;
+        previousHRatio = hRatio;
     }
 }
