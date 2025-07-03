@@ -37,51 +37,39 @@ public class ArUcoMarkerDetector : MonoBehaviour
 
     public DetectInfo GetDetectInfo(Mat scanMat)
     {
-       
-        // 1. 텍스처 → Mat
-
-
-        //디버그용 현재 imgMat 
-        Texture2D resultTex = new Texture2D(scanMat.cols(), scanMat.rows(), TextureFormat.RGBA32, false);
-        Utils.matToTexture2D(scanMat, resultTex);
-        scannedTex = resultTex;
-        Utils.matToTexture2D(scanMat, resultTex);
-        ScanImage.texture = resultTex;
-
-        // 2. Grayscale로 변환
+        // 1. Grayscale 변환
         Mat grayMat = new Mat();
         Imgproc.cvtColor(scanMat, grayMat, Imgproc.COLOR_RGB2GRAY);
 
-        // 3. 딕셔너리 정의
+        // 2. ArUco 딕셔너리 설정
         Dictionary dictionary = Aruco.getPredefinedDictionary(Aruco.DICT_4X4_50);
 
-        // 4. 마커 검출
-        corners = new List<Mat>();
+        // 3. 마커 검출
+        List<Mat> corners = new List<Mat>();
         Mat ids = new Mat();
-        // 5. 결과 표시 
+        int markerId = -1;
+
         Aruco.detectMarkers(grayMat, dictionary, corners, ids);
-        //Utils.matToTexture2D(scanMat, resultTex);
+
+        // 4. 마커가 감지되었을 경우 처리
         if (ids.total() > 0)
         {
             Aruco.drawDetectedMarkers(scanMat, corners, ids);
-            for (int i = 0; i < ids.total(); i++)
-            {
-                markerId = (int)ids.get(i, 0)[0];
-                //persepectiveInfo.markerId = markerId;
-                Debug.Log(" 감지된 마커 ID: " + markerId);
-
-            }
+            markerId = (int)ids.get(0, 0)[0]; // 첫 번째 마커 ID
+            Debug.Log("감지된 마커 ID: " + markerId);
         }
         else
         {
-
-            Debug.Log("마커인식안됨");
-
+            Debug.Log("마커 인식 안됨");
         }
 
-        // 6. 결과를 텍스처로 표시
-     
+        // 5. 결과 텍스처로 표시 (디버그용)
+        Texture2D resultTex = new Texture2D(scanMat.cols(), scanMat.rows(), TextureFormat.RGBA32, false);
+        Utils.matToTexture2D(scanMat, resultTex); // 마커 그려진 상태
+        ScanImage.texture = resultTex;
+        scannedTex = resultTex;
 
+        // 6. 결과 객체 생성 및 반환
         DetectInfo detectInfo = new DetectInfo(scanMat, corners, markerId);
         return detectInfo;
     }

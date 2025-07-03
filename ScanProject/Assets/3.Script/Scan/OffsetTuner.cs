@@ -17,10 +17,11 @@ public class OffsetTuner : ImageAnalysis
     public Texture2D scannedTex;
 
     [Header("Offset Controls")]
-    [Range(-840, 840)] public int offsetX = 0;
+    [Range(-840, 1500)] public int offsetX = 0;
     [Range(-1180, 1180)] public int offsetY = 0;
-    [Range(-0, 2048)] public int cropSize = 1509;
+    [Range(-0, 3000)] public int cropSize = 1509;
      public float hRatio = 1.5f;
+     public float expandRatio = 1.5f;
     private int startOffsetY = 300;
     private int startOffsetX = 0;
     private ObjectScanData objectData;
@@ -40,7 +41,8 @@ public class OffsetTuner : ImageAnalysis
     private int previousUpperValue = 50;
     private int previouskernelValue = 4;
     private int previousLerpValue = 3;
-    private float previousHRatio = 1;
+    private float previousHRatio = 1.5f;
+    private float previousExpandRatio = 1;
     private bool isTrigger;
 
     void Start()
@@ -61,13 +63,13 @@ public class OffsetTuner : ImageAnalysis
         // 마커 기준 crop 영역 계산
         int x = (int)Math.Round(startPoint.x) + objectData.offsetX + offsetX;
         int y = (int)Math.Round(startPoint.y) + objectData.offsetY + offsetY;
-        if (x < 0 || y < 0 || x + cropSize > scannedMat.cols() || y + cropSize > scannedMat.rows())
-        {
-            offsetX = previousX - objectData.startOffset - (int)Math.Round(startPoint.x);
-            offsetY = previousY - objectData.startOffset - (int)Math.Round(startPoint.y);
-            cropSize = previousCropSize;
-            return;
-        }
+        //if (x < 0 || y < 0 || x + cropSize > scannedMat.cols() || y + cropSize > scannedMat.rows())
+        //{
+        //    offsetX = scannedMat.cols();
+        //    offsetY = scannedMat.rows();
+        //    cropSize = previousCropSize;
+        //    return;
+        //}
         if (!ChangedValue(x, y))
         {
             return;
@@ -83,19 +85,19 @@ public class OffsetTuner : ImageAnalysis
         // crop 영역 추출
         //600 50  300 150
         float cropY = cropSize / hRatio;
-     
         OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(x, y, cropSize, (int)cropY);
-        Mat cropped = new Mat(scannedMat, cropRect);
+        Mat cropped = new Mat(scannedMat, cropRect).clone();
 
 
+
+        Core.flip(cropped, cropped, 0); // X축 기준 좌우 반전
+        //cropTex = ExpandCropedMat(cropped, expandRatio);
         cropTex = new Texture2D(cropped.cols(), cropped.rows(), TextureFormat.RGBA32, false);
         // 디버그용 미리보기
 
         Utils.matToTexture2D(cropped, cropTex);
         //Utils.matToTexture2D(cropped, cropTex);
-
         CropDisplay.texture = cropTex;
-        Core.flip(cropped, cropped, 0); // X축 기준 좌우 반전
         ApplyMaterial();
     }
    
@@ -106,6 +108,7 @@ public class OffsetTuner : ImageAnalysis
         RoadData();
 
         scannedMat = inputImage;
+        //Core.flip(scannedMat, scannedMat, 0); // X축 기준 좌우 반전
         //ApplyTexture(scannedMat, CropDisplay);
 
         isTuningStart = true;
@@ -124,7 +127,7 @@ public class OffsetTuner : ImageAnalysis
     public void SaveData()
     {
         //objectData.objectID = arucoMarkerDetector.markerId;
-        objectData.offsetX = offsetX;
+        objectData.offsetX += offsetX;
         objectData.offsetY += offsetY;
         objectData.cropSize = cropSize;
         objectData.hRatio = hRatio;
@@ -135,7 +138,7 @@ public class OffsetTuner : ImageAnalysis
     }
     private void RoadData()
     {
-        objectData = CustomJsonManager.jsonManager.dataList[arucoMarkerDetector.markerId];
+        objectData = CustomJsonManager.jsonManager.dataList[detectInfo.markerId];
         if (isCropName)
         {
         objectData = CustomJsonManager.jsonManager.dataList[3];
@@ -153,7 +156,7 @@ public class OffsetTuner : ImageAnalysis
     private bool ChangedValue(int x , int y)
     {
         if (previousX == x && previousY == y && cropSize == previousCropSize && previouslowerValue == lowerValue && previousUpperValue == UpperValue &&
-           previouskernelValue == kernelValue && previousLerpValue == LerpValue && Mathf.Approximately(previousHRatio , hRatio))
+           previouskernelValue == kernelValue && previousLerpValue == LerpValue && Mathf.Approximately(previousHRatio , hRatio) && Mathf.Approximately(previousExpandRatio , expandRatio))
         {
             return false;
         }
@@ -169,5 +172,7 @@ public class OffsetTuner : ImageAnalysis
         previouskernelValue = kernelValue;
         previousLerpValue = LerpValue;
         previousHRatio = hRatio;
+        previousExpandRatio = expandRatio;
     }
+  
 }

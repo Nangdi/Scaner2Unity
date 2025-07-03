@@ -3,7 +3,7 @@ using OpenCVForUnity.ImgcodecsModule;
 using OpenCVForUnity.ImgprocModule;
 using OpenCVForUnity.PhotoModule;
 using OpenCVForUnity.UnityUtils;
-using OpenCvSharp;
+//using OpenCvSharp;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -47,19 +47,29 @@ public class ObjectSpawner : MonoBehaviour
         GameObject ob = Instantiate(myObject); //내오브젝트 생성
         GameObject nameTagOb = Instantiate(nameObject, canvas.transform); // 내오브젝트에 달릴 이름생성
         nameTagOb.GetComponent<NameTagController>().targetHeadPos = ob.transform.GetChild(0); //이름표가 따라다닐 타겟
-        Texture2D resultTex = new Texture2D(drawingAreaMat.cols(), drawingAreaMat.rows(), TextureFormat.RGBA32 , false); // 오브젝트에 입힐 texture
-        OpenCVForUnity.UnityUtils.Utils.matToTexture2D(drawingAreaMat, resultTex); //Mat -> texture변환
-        if (ob != null)
+        Texture2D modelTexture = mat2Text(drawingAreaMat);
+        Texture2D nameTexture = mat2Text(nameAreaMat);
+
+        Text2Model(modelTexture, nameTexture, ob, nameTagOb);
+
+
+    }
+    public Texture2D mat2Text(OpenCVForUnity.CoreModule.Mat mat)
+    {
+        Texture2D resultTex = new Texture2D(mat.cols(), mat.rows(), TextureFormat.RGBA32, false); // 오브젝트에 입힐 texture
+        OpenCVForUnity.UnityUtils.Utils.matToTexture2D(mat, resultTex); //Mat -> texture변환
+
+        return resultTex;
+    }
+    public void Text2Model(Texture2D drawing , Texture2D name , GameObject modelOb , GameObject nameOb )
+    {
+        nameOb.GetComponent<RawImage>().texture = name;
         {
-            renderer = ob.GetComponent<Renderer>();
+            renderer = modelOb.GetComponent<Renderer>();
             if (renderer != null)
             {
-                renderer.material.mainTexture = resultTex;
+                renderer.material.mainTexture = drawing;
             }
         }
-    }
-    public void InitUpdate()
-    {
-        
     }
 }

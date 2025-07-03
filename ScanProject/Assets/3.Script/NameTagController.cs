@@ -6,5 +6,15 @@ using UnityEngine.UI;
 public class NameTagController : MonoBehaviour
 {
     public Transform targetHeadPos;
-    public RawImage test;
+
+    private void Update()
+    {
+        if(targetHeadPos == null)
+        {
+            Debug.Log("TargetPos가 null 입니다.");
+            return;
+        }
+        transform.position = targetHeadPos.position ;
+
+    }
 }

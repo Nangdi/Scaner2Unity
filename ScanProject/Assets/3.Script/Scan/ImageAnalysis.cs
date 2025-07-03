@@ -45,13 +45,14 @@ public class ImageAnalysis : MonoBehaviour
    
     public virtual void ProcessAnalysis(Texture2D scannedTexture)
     {
+
+
         //Tex ->Mat 변환
-        Mat imageMat = new Mat(scannedTexture.height, scannedTexture.width, CvType.CV_8UC3);
+        Mat imageMat = new Mat(scannedTexture.height, scannedTexture.width, CvType.CV_8UC3).clone();
         OpenCVForUnity.UnityUtils.Utils.texture2DToMat(scannedTexture, imageMat);
+        imageMat = ExpandCropedMat(imageMat, 1.5f);
         inputImage = imageMat;
 
-
-        UnityEngine.Debug.Log(arucoMarkerDetector);
         //scannedTexture Marker 정보 가져오기
         detectInfo = arucoMarkerDetector.GetDetectInfo(imageMat);
         //Point markerPoint = scanInfo.standardOffset;
@@ -107,7 +108,8 @@ public class ImageAnalysis : MonoBehaviour
         //crop하는기능
         float cropY = boxSize / data.hRatio;
         OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(startX, startY, boxSize, (int)cropY);
-        Mat cropped = new Mat(inputImage, cropRect);
+        Mat cropped = new Mat(inputImage, cropRect).clone();
+        Core.flip(cropped, cropped, 0); // X축 기준 좌우 반전
         return cropped;
 
     }
@@ -159,7 +161,33 @@ public class ImageAnalysis : MonoBehaviour
 
         return inpainted;
     }
-    private void InstantiateName(Mat name)
+    private Mat ExpandCropedMat(Mat croppedMat, float expandRatio)
     {
+        // 1. 기존 crop된 이미지 크기
+        int originalW = croppedMat.cols();
+        int originalH = croppedMat.rows();
+
+        // 2. 확장할 canvas 크기
+        int expandedW = (int)(originalW * expandRatio);
+        int expandedH = (int)(originalH * expandRatio);
+
+        // 3. 흰색 배경으로 새 Mat 생성 (3채널)
+        Mat expandedMat = new Mat(expandedH, expandedW, croppedMat.type(), new Scalar(255, 255, 255));
+
+        // 4. 가운데 위치 계산
+        int offsetX = (expandedW - originalW) / 2;
+        int offsetY = (expandedH - originalH) / 2;
+
+        // 5. ROI 영역에 원본 Mat 붙이기
+        OpenCVForUnity.CoreModule.Rect roi = new OpenCVForUnity.CoreModule.Rect(offsetX, offsetY, originalW, originalH);
+        croppedMat.copyTo(new Mat(expandedMat, roi));
+
+
+
+        //// 6. Texture2D로 변환
+        //Texture2D resultTex = new Texture2D(expandedW, expandedH, TextureFormat.RGBA32, false);
+        //OpenCVForUnity.UnityUtils.Utils.matToTexture2D(expandedMat, resultTex);
+
+        return expandedMat;
     }
 }
