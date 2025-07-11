@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7491578657797355610
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6096291173995146454}
+  - component: {fileID: 3244652540910376409}
+  m_Layer: 0
+  m_Name: OffsetTuner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6096291173995146454
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7491578657797355610}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 909.34863, y: 474.76978, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3244652540910376409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7491578657797355610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa64891bdd8b6d24fbbd4f12f2d416df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arucoMarkerDetector: {fileID: 0}
+  objectSpawner: {fileID: 0}
+  go: {fileID: 0}
+  debugImage: {fileID: 0}
+  isOutlineEnabled: 0
+  isCropName: 1
+  lowerValue: 0
+  UpperValue: 50
+  kernelValue: 4
+  LerpValue: 10
+  scannedTex: {fileID: 2800000, guid: 56ed619de6ae62b418b5187687e147f4, type: 3}
+  offsetX: 0
+  offsetY: 0
+  cropSize: 1487
+  hRatio: 1.5
+  expandRatio: 1.5
+  CropDisplay: {fileID: 0}

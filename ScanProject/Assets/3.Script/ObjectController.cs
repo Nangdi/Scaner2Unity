@@ -19,58 +19,37 @@ public class ObjectController : MonoBehaviour
 
     public State state;
     [SerializeField]
+    private OffsetTuner offsetTuner;
+    [SerializeField]
     private BoxCollider col;
     [SerializeField]
     private Animator animator;
     private Vector3 targetPosition;
     public int MotionDelay =3;
     private float remainingTime;
+    Vector3 CameraDir = new Vector3();
     private void Start()
     {
+        offsetTuner.go = gameObject;
         StartCoroutine(BehaviorLoop());
+        CameraDir = new Vector3(Camera.main.transform.position.x, transform.position.y, Camera.main.transform.position.z);
+
+     
     }
     private void Update()
     {
         if (state != State.Walk) return;
+        targetPosition.y = transform.position.y;
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * 5);
         transform.LookAt(targetPosition);
         float distance = Vector3.Distance(transform.position, targetPosition);
         if(distance < 0.1f)
         {
             SetState(State.Idle);
+            transform.LookAt(CameraDir);
         }
     }
-    private void PlayAction(State state)
-    {
-        switch (state)
-        {
-            case State.Idle:
-              
-                break;
-            case State.Walk:
-                SetState(State.Walk);
-                animator.SetBool("isWalking", true);
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * 5);
-                transform.LookAt(targetPosition);
-                break;
-            case State.Reaction1:
-                SetState(State.Reaction1);
-                animator.SetTrigger("Reaction1");
-                break;
-            case State.Reaction2:
-                SetState(State.Reaction2);
-                animator.SetTrigger("Reaction2");
-                break;
-            case State.Reaction3:
-                SetState(State.Reaction3);
-                animator.SetTrigger("Reaction3");
-
-                break;
-        }
-
-
-
-    }
+    
     public void SetState(State state)
     {
         this.state = state;
@@ -78,6 +57,7 @@ public class ObjectController : MonoBehaviour
         {
             case State.Idle:
                 state = State.Idle;
+                animator.SetBool("isWalking", false);
                 break;
             case State.Walk:
                 state = State.Walk;
@@ -104,8 +84,11 @@ public class ObjectController : MonoBehaviour
         while (true)
         {
 
+            if (state == State.Idle)
+            {
 
-            remainingTime += Time.deltaTime;
+                remainingTime += Time.deltaTime;
+            }
 
 
             if (state == State.Idle && remainingTime > MotionDelay)

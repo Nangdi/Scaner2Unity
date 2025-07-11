@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 4294305239525934472}
   - component: {fileID: -892221711823385848}
   - component: {fileID: 1592464200088568310}
+  - component: {fileID: -5560291713165107932}
   m_Layer: 0
   m_Name: "\uC0DD\uC950\uC0D8\uD50C"
   m_TagString: Untagged
@@ -167,3 +168,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 4
   m_CollisionDetection: 0
+--- !u!114 &-5560291713165107932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3772729545908445268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f11eb55582812148aebc23a79bff37d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  offsetTuner: {fileID: 3244652540910376409, guid: 1392e0377f40da244958671f1252b50c, type: 3}
+  col: {fileID: 0}
+  animator: {fileID: 0}
+  MotionDelay: 3
