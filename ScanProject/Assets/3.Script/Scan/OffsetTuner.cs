@@ -174,5 +174,25 @@ public class OffsetTuner : ImageAnalysis
         previousHRatio = hRatio;
         previousExpandRatio = expandRatio;
     }
-  
+    public float ModifyValue(string variableName, float amount)
+    {
+        switch (variableName)
+        {
+            case "X":
+                offsetX += Mathf.RoundToInt(amount);
+                return offsetX;
+            case "Y":
+                offsetY += Mathf.RoundToInt(amount);
+                return offsetY;
+            case "CropSize":
+                cropSize += Mathf.RoundToInt(amount);
+                return cropSize;
+            case "HRatio":
+                hRatio += amount;
+                return hRatio;
+                
+        }
+        Debug.Log($"{variableName} updated");
+        return 0;
+    }
 }
