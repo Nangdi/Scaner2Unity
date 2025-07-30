@@ -45,6 +45,8 @@ public class OffsetTuner : ImageAnalysis
     private float previousExpandRatio = 1;
     private bool isTrigger;
 
+    [SerializeField]
+    private List<UIButtonIncrementer> uIButtonIncrementers;
     void Start()
     {
       
@@ -91,8 +93,12 @@ public class OffsetTuner : ImageAnalysis
 
 
         Core.flip(cropped, cropped, 0); // X축 기준 좌우 반전
-        //cropTex = ExpandCropedMat(cropped, expandRatio);
-        cropTex = new Texture2D(cropped.cols(), cropped.rows(), TextureFormat.RGBA32, false);
+                                        //cropTex = ExpandCropedMat(cropped, expandRatio);
+                                        //if(pr)
+        if (cropTex == null || cropTex.width != cropped.cols() || cropTex.height != cropped.rows())
+        {
+            cropTex = new Texture2D(cropped.cols(), cropped.rows(), TextureFormat.RGBA32, false);
+        }
         // 디버그용 미리보기
 
         Utils.matToTexture2D(cropped, cropTex);
@@ -100,9 +106,9 @@ public class OffsetTuner : ImageAnalysis
         CropDisplay.texture = cropTex;
         ApplyMaterial();
     }
-   
 
-    public void MarkerOffSetInit()
+
+    public void InitSetting()
     {
         //arucoMarkerDetector.GetDetectInfo();
         RoadData();
@@ -110,6 +116,10 @@ public class OffsetTuner : ImageAnalysis
         scannedMat = inputImage;
         //Core.flip(scannedMat, scannedMat, 0); // X축 기준 좌우 반전
         //ApplyTexture(scannedMat, CropDisplay);
+        foreach (var item in uIButtonIncrementers)
+        {
+            item.InitValue();
+        }
 
         isTuningStart = true;
     }
@@ -117,10 +127,13 @@ public class OffsetTuner : ImageAnalysis
     {
         if (go != null)
         {
-            Renderer renderer = go.GetComponent<Renderer>();
+            Renderer renderer = go.GetComponentInChildren<Renderer>();
             if (renderer != null)
             {
-                renderer.material.mainTexture = cropTex;
+                Debug.Log(renderer);
+                //Debug.Log(renderer.material);
+                //Debug.Log(renderer.material.mainTexture);
+                renderer.materials[0].mainTexture = cropTex;
             }
         }
     }
@@ -144,7 +157,7 @@ public class OffsetTuner : ImageAnalysis
         objectData = CustomJsonManager.jsonManager.dataList[3];
 
         }
-        go = CustomJsonManager.jsonManager.objectList[objectData.objectID];
+        //go = CustomJsonManager.jsonManager.objectList[objectData.objectID];
         Debug.Log(objectData.offsetY);
 
         startOffsetX = objectData.offsetX;
@@ -155,6 +168,7 @@ public class OffsetTuner : ImageAnalysis
     }
     private bool ChangedValue(int x , int y)
     {
+        //Debug.Log("밸류변했는지 체크");
         if (previousX == x && previousY == y && cropSize == previousCropSize && previouslowerValue == lowerValue && previousUpperValue == UpperValue &&
            previouskernelValue == kernelValue && previousLerpValue == LerpValue && Mathf.Approximately(previousHRatio , hRatio) && Mathf.Approximately(previousExpandRatio , expandRatio))
         {
@@ -194,5 +208,9 @@ public class OffsetTuner : ImageAnalysis
         }
         Debug.Log($"{variableName} updated");
         return 0;
+    }
+    public void UpdateValue()
+    {
+
     }
 }

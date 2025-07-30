@@ -87,4 +87,9 @@ public class UIButtonIncrementer : MonoBehaviour, IPointerDownHandler, IPointerU
 
         amount = float.Parse(inputField.text);
     }
+    public void InitValue()
+    {
+        float value = tuner.ModifyValue(variableName.ToString(), 0);
+        ReplaceValue(value);
+    }
 }

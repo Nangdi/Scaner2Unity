@@ -72,7 +72,7 @@ public class ImageAnalysis : MonoBehaviour
         objectSpawner.nameAreaMat = nameTagMat;
         objectSpawner.currentScanData = obScanData;
 
-        objectSpawner.CreatObject();
+        go= objectSpawner.CreatObject();
 
         ////애를 nameTagManager로 전달
         //if (isCropName)

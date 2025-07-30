@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 610450638857270173}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: -892221711823385848}
   - component: {fileID: 1592464200088568310}
   - component: {fileID: -5560291713165107932}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: "\uC0DD\uC950\uC0D8\uD50C"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,6 +182,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   offsetTuner: {fileID: 3244652540910376409, guid: 1392e0377f40da244958671f1252b50c, type: 3}
-  col: {fileID: 0}
+  col: {fileID: 742152091579162316, guid: e22b20a67127e1e48adebb1e3123ec02, type: 3}
   animator: {fileID: 0}
   MotionDelay: 3

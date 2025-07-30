@@ -41,7 +41,7 @@ public class ObjectSpawner : MonoBehaviour
     //Texture2D nameTagTex = new Texture2D(nameTagMat.cols(), nameTagMat.rows(), TextureFormat.RGBA32, false);
     //OpenCVForUnity.UnityUtils.Utils.matToTexture2D(nameTagMat, nameTagTex);
     //nameTagManager.test.texture = nameTagTex;
-    public void CreatObject()
+    public GameObject CreatObject()
     {
         myObject = CustomJsonManager.jsonManager.objectList[currentScanData.objectID];
 
@@ -53,6 +53,7 @@ public class ObjectSpawner : MonoBehaviour
         Texture2D nameTexture = mat2Text(nameAreaMat);
 
         Text2Model(modelTexture, nameTexture, ob, nameTagOb);
+        return ob;
 
 
     }
@@ -67,7 +68,7 @@ public class ObjectSpawner : MonoBehaviour
     {
         nameOb.GetComponent<RawImage>().texture = name;
         {
-            renderer = modelOb.GetComponent<Renderer>();
+            renderer = modelOb.GetComponentInChildren<Renderer>();
             if (renderer != null)
             {
                 renderer.material.mainTexture = drawing;

@@ -33,7 +33,7 @@ public class ObjectController : MonoBehaviour
         offsetTuner.go = gameObject;
         StartCoroutine(BehaviorLoop());
         CameraDir = new Vector3(Camera.main.transform.position.x, transform.position.y, Camera.main.transform.position.z);
-
+        col = GameObject.FindGameObjectWithTag("bounds").GetComponent<BoxCollider>();
      
     }
     private void Update()
