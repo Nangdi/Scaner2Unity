@@ -1349,7 +1349,7 @@ MonoBehaviour:
   objectSpawner: {fileID: 1350883449}
   go: {fileID: 0}
   debugImage: {fileID: 1729748676}
-  isOutlineEnabled: 1
+  isOutlineEnabled: 0
   isCropName: 0
   lowerValue: 0
   UpperValue: 50
@@ -5292,10 +5292,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataList: []
   objectList:
-  - {fileID: 5716443260869243609, guid: 403290fcdb89c7340a28bd133d6b1d94, type: 3}
-  - {fileID: 5716443260869243609, guid: 403290fcdb89c7340a28bd133d6b1d94, type: 3}
-  - {fileID: 5716443260869243609, guid: 403290fcdb89c7340a28bd133d6b1d94, type: 3}
-  - {fileID: 5716443260869243609, guid: 403290fcdb89c7340a28bd133d6b1d94, type: 3}
+  - {fileID: 975627443009429341, guid: c9a39cf75ca0e1b4095b71460cd5bb94, type: 3}
+  - {fileID: 975627443009429341, guid: c9a39cf75ca0e1b4095b71460cd5bb94, type: 3}
+  - {fileID: 975627443009429341, guid: c9a39cf75ca0e1b4095b71460cd5bb94, type: 3}
+  - {fileID: 975627443009429341, guid: c9a39cf75ca0e1b4095b71460cd5bb94, type: 3}
 --- !u!114 &1752399527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8562,7 +8562,7 @@ Animator:
   m_GameObject: {fileID: 3025156081608085673}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 22ca4b113e733e24e8b34871a841bffb, type: 2}
+  m_Controller: {fileID: 9100000, guid: b0aab7ad30798e14189b8b923cc3d557, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -8800,7 +8800,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!137 &3683749375620836603
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -9708,6 +9708,7 @@ MonoBehaviour:
   offsetTuner: {fileID: 594613485}
   col: {fileID: 1359531480}
   animator: {fileID: 2232977632165605522}
+  namePos: {fileID: 0}
   MotionDelay: 5
 --- !u!4 &6105183907705918568
 Transform:

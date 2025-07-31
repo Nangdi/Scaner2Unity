@@ -47,7 +47,7 @@ public class ObjectSpawner : MonoBehaviour
 
         GameObject ob = Instantiate(myObject); //내오브젝트 생성
         GameObject nameTagOb = Instantiate(nameObject, canvas.transform); // 내오브젝트에 달릴 이름생성
-        nameTagOb.GetComponent<NameTagController>().targetHeadPos = ob.transform.GetChild(0); //이름표가 따라다닐 타겟
+        nameTagOb.GetComponent<NameTagController>().targetHeadPos = ob.GetComponent<ObjectController>().namePos; //이름표가 따라다닐 타겟
         followTarget.target = ob.transform;
         Texture2D modelTexture = mat2Text(drawingAreaMat);
         Texture2D nameTexture = mat2Text(nameAreaMat);

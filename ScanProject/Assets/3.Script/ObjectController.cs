@@ -24,6 +24,7 @@ public class ObjectController : MonoBehaviour
     private BoxCollider col;
     [SerializeField]
     private Animator animator;
+    public Transform namePos;
     private Vector3 targetPosition;
     public int MotionDelay =3;
     private float remainingTime;
@@ -96,16 +97,17 @@ public class ObjectController : MonoBehaviour
                 Debug.Log("¸ð¼Çµô·¹ÀÌ¼³Á¤");
                 MotionDelay = Random.Range(5, 10);
                 Debug.Log("·£´ýÀÎµ¦½º");
-                int randomIndex = Random.Range(1, 4);
-                if (randomIndex == 1)
+                int randomIndex = Random.Range(1, 5);
+                if (randomIndex <4)
                 {
                     //walkÄÚµå
                     targetPosition = SetNewRandomDestination();
-                    SetState((State)randomIndex);
+                    SetState((State)1);
                 }
                 else
                 {
-                    SetState((State)randomIndex);
+                    int index = randomIndex & 3;
+                    SetState((State)index);
                 }
                 remainingTime = 0;
 
