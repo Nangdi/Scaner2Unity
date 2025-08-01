@@ -2594,7 +2594,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 2800000, guid: 4f51860dee9c05942b8efb511373d27a, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -4569,7 +4569,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   imageAnalysis: {fileID: 594613485}
   CurrentScanImage: {fileID: 0}
-  fileName: 20250702153412
+  fileName: 20250731131215
   mode: 0
 --- !u!1 &1653148832
 GameObject:

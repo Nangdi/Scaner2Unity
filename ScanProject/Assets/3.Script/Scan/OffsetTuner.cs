@@ -29,7 +29,7 @@ public class OffsetTuner : ImageAnalysis
 
     [Header("Live Crop")]
     public RawImage CropDisplay;
-    private Mat scannedMat;
+    private Mat scannedMat= new Mat();
     private Point markerTopLeft = new Point(0,0); // 마커 좌상단 (임시값)
 
     private bool isTuningStart;
@@ -82,7 +82,9 @@ public class OffsetTuner : ImageAnalysis
         }
         Debug.Log($"추출적용 시작좌표({(int)Math.Round(startPoint.x)},{(int)Math.Round(startPoint.y)})");
         Debug.Log($"추출적용 시작좌표({x},{y})");
-
+        //scannedTex = new Texture2D(scannedMat.cols(), scannedMat.rows(), TextureFormat.RGBA32, false);
+        //Utils.matToTexture2D(scannedMat, scannedTex);
+        //arucoMarkerDetector.correctionImage.texture = scannedTex;
 
         // crop 영역 추출
         //600 50  300 150

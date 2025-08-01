@@ -50,18 +50,24 @@ public class ImageAnalysis : MonoBehaviour
         //Tex ->Mat 변환
         Mat imageMat = new Mat(scannedTexture.height, scannedTexture.width, CvType.CV_8UC3).clone();
         OpenCVForUnity.UnityUtils.Utils.texture2DToMat(scannedTexture, imageMat);
-        imageMat = ExpandCropedMat(imageMat, 1.5f);
-        inputImage = imageMat;
 
         //scannedTexture Marker 정보 가져오기
         detectInfo = arucoMarkerDetector.GetDetectInfo(imageMat);
+        imageMat = ExpandCropedMat(detectInfo.scanMat, 1.5f);
+        Core.flip(imageMat, imageMat, 0); // X축 기준 좌우 반전
+        Texture2D debugTex = new Texture2D(imageMat.cols(), imageMat.rows(), TextureFormat.RGBA32, false);
+        OpenCVForUnity.UnityUtils.Utils.matToTexture2D(imageMat, debugTex);
+
+        arucoMarkerDetector.ScanImage.texture = debugTex;
+        inputImage = imageMat;
+
         //Point markerPoint = scanInfo.standardOffset;
 
         obScanData = CustomJsonManager.jsonManager.dataList[detectInfo.markerId];
         ObjectScanData nameInfoData = CustomJsonManager.jsonManager.dataList[3];
         UnityEngine.Debug.Log("Detected markerID: " + detectInfo.markerId);
 
-        MatOfPoint2f markerCorners = new MatOfPoint2f(detectInfo.markerCorners[0]);
+        MatOfPoint2f markerCorners = new MatOfPoint2f(detectInfo.markerCorner);
 
 
 
@@ -161,7 +167,7 @@ public class ImageAnalysis : MonoBehaviour
 
         return inpainted;
     }
-    private Mat ExpandCropedMat(Mat croppedMat, float expandRatio)
+    public static Mat ExpandCropedMat(Mat croppedMat, float expandRatio)
     {
         // 1. 기존 crop된 이미지 크기
         int originalW = croppedMat.cols();
