@@ -29,6 +29,7 @@ public class ImageAnalysis : MonoBehaviour
     Renderer renderer;
     Texture2D resultTex;
     protected Mat inputImage;
+    protected Mat nameImage;
     public DetectInfo detectInfo;
     protected Point startPoint;
     public bool isOutlineEnabled = false;
@@ -50,7 +51,8 @@ public class ImageAnalysis : MonoBehaviour
         //Tex ->Mat 변환
         Mat imageMat = new Mat(scannedTexture.height, scannedTexture.width, CvType.CV_8UC3).clone();
         OpenCVForUnity.UnityUtils.Utils.texture2DToMat(scannedTexture, imageMat);
-
+        nameImage = imageMat.clone();
+        Core.flip(nameImage, nameImage, 0); // X축 기준 좌우 반전
         //scannedTexture Marker 정보 가져오기
         detectInfo = arucoMarkerDetector.GetDetectInfo(imageMat);
         imageMat = ExpandCropedMat(detectInfo.scanMat, 1.5f);
@@ -71,8 +73,8 @@ public class ImageAnalysis : MonoBehaviour
 
 
 
-        Mat cropped = CroppedImage(markerCorners, obScanData);
-        Mat nameTagMat = CroppedImage(markerCorners, nameInfoData);
+        Mat cropped = CroppedImage(markerCorners, obScanData, false);
+        Mat nameTagMat = CroppedImage(markerCorners, nameInfoData, true);
 
         objectSpawner.drawingAreaMat = cropped;
         objectSpawner.nameAreaMat = nameTagMat;
@@ -102,7 +104,7 @@ public class ImageAnalysis : MonoBehaviour
 
         // 텍스처화
     }
-    public Mat CroppedImage(MatOfPoint2f markerCorners , ObjectScanData data)
+    public Mat CroppedImage(MatOfPoint2f markerCorners , ObjectScanData data,bool isName)
     {
         Point[] points = markerCorners.toArray();
         startPoint = points[0]; // ← 바로 이게 좌측 상단
@@ -114,7 +116,15 @@ public class ImageAnalysis : MonoBehaviour
         //crop하는기능
         float cropY = boxSize / data.hRatio;
         OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(startX, startY, boxSize, (int)cropY);
-        Mat cropped = new Mat(inputImage, cropRect).clone();
+        Mat cropped;
+        if (isName)
+        {
+            cropped = new Mat(nameImage, cropRect).clone();
+        }
+        else
+        {
+            cropped = new Mat(inputImage, cropRect).clone();
+        }
         Core.flip(cropped, cropped, 0); // X축 기준 좌우 반전
         return cropped;
 

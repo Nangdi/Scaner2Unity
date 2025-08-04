@@ -90,7 +90,15 @@ public class OffsetTuner : ImageAnalysis
         //600 50  300 150
         float cropY = cropSize / hRatio;
         OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(x, y, cropSize, (int)cropY);
-        Mat cropped = new Mat(scannedMat, cropRect).clone();
+        Mat cropped;
+        if (isCropName)
+        {
+            cropped = new Mat(nameImage, cropRect).clone();
+        }
+        else
+        {
+            cropped = new Mat(scannedMat, cropRect).clone();
+        }
 
 
 

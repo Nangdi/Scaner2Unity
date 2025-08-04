@@ -101,10 +101,10 @@ public class ArUcoMarkerDetector : MonoBehaviour
 
         // 5. 시계방향 정렬 (좌상 → 우상 → 우하 → 좌하)
         List<Point> ordered = OrderPointsClockwise(centerPoints);
-        //CalculateMarkerQuadAspectRatio(ordered[0] , ordered[1] , ordered[2], ordered[3]);
+        CalculateMarkerQuadAspectRatio(ordered[0], ordered[1], ordered[2], ordered[3]);
         // 6. 보정 대상 좌표 정의 (A4 비율)
-        int width = 2120;
-        int height = 1450;
+        int width = 1980;
+        int height = 1120;
         MatOfPoint2f src = new MatOfPoint2f(ordered.ToArray());
         MatOfPoint2f dst = new MatOfPoint2f(
             new Point(0, 0),

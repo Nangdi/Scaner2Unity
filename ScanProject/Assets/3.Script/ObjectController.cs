@@ -14,10 +14,16 @@ public enum State
     Reaction2,
     Reaction3
 };
+public enum ObjectType
+{
+    Fariy,
+    Mouse
+}
 public class ObjectController : MonoBehaviour
 {
 
     public State state;
+    public ObjectType type;
     [SerializeField]
     private OffsetTuner offsetTuner;
     [SerializeField]
@@ -29,6 +35,9 @@ public class ObjectController : MonoBehaviour
     public int MotionDelay =3;
     private float remainingTime;
     Vector3 CameraDir = new Vector3();
+    Vector3 LookAtDir = new Vector3();
+
+    public int percentChance = 50;
     private void Start()
     {
         offsetTuner.go = gameObject;
@@ -40,14 +49,16 @@ public class ObjectController : MonoBehaviour
     private void Update()
     {
         if (state != State.Walk) return;
-        targetPosition.y = transform.position.y;
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * 5);
-        transform.LookAt(targetPosition);
+
+        LookAtDir = targetPosition;
+        LookAtDir.y = transform.position.y;
+        transform.LookAt(LookAtDir);
         float distance = Vector3.Distance(transform.position, targetPosition);
         if(distance < 0.1f)
         {
             SetState(State.Idle);
-            transform.LookAt(CameraDir);
+            //transform.LookAt(CameraDir);
         }
     }
     
@@ -95,10 +106,10 @@ public class ObjectController : MonoBehaviour
             if (state == State.Idle && remainingTime > MotionDelay)
             {
                 Debug.Log("¸ð¼Çµô·¹ÀÌ¼³Á¤");
-                MotionDelay = Random.Range(5, 10);
+                MotionDelay = Random.Range(2, 5);
                 Debug.Log("·£´ýÀÎµ¦½º");
-                int randomIndex = Random.Range(1, 5);
-                if (randomIndex <4)
+                int randomIndex = Random.Range(1, 101);
+                if (randomIndex <= percentChance)
                 {
                     //walkÄÚµå
                     targetPosition = SetNewRandomDestination();
@@ -106,8 +117,15 @@ public class ObjectController : MonoBehaviour
                 }
                 else
                 {
-                    int index = randomIndex & 3;
-                    SetState((State)index);
+                    int random = Random.Range(2, 4);
+                    //4 5
+                    //int index = randomIndex;
+                    if(random == 2 && type == ObjectType.Mouse)
+                    {
+                        transform.LookAt(CameraDir);
+
+                    }
+                    SetState((State)random);
                 }
                 remainingTime = 0;
 
@@ -123,7 +141,12 @@ public class ObjectController : MonoBehaviour
         Bounds bounds = col.bounds;
         float randX = Random.Range(bounds.min.x, bounds.max.x);
         float randZ = Random.Range(bounds.min.z, bounds.max.z);
-        targetPosition = new Vector3(randX, transform.position.y, randZ);
+        float randY = transform.position.y;
+        if(type == ObjectType.Fariy)
+        {
+            randY = Random.Range(bounds.min.y, bounds.max.y);
+        }
+        targetPosition = new Vector3(randX, randY, randZ);
 
         return targetPosition;
     }
