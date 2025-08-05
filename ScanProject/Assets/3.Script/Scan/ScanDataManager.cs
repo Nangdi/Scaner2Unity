@@ -89,8 +89,8 @@ public class ScanDataManager : MonoBehaviour
         //        imageAnalysis.ProcessAnalysis(CurrentScanImage);
         //        break;
         //}
-        //imageAnalysis.ProcessAnalysis(CurrentScanImage);
-        StartCoroutine(imageAnalysis.ProcessAnalysisCoroutine(CurrentScanImage));
+        imageAnalysis.ProcessAnalysis(CurrentScanImage);
+        //StartCoroutine(imageAnalysis.ProcessAnalysisCoroutine(CurrentScanImage));
         //}
         //catch (Exception ex)
         //{
