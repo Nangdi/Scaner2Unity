@@ -23,6 +23,7 @@ public class ScanDataManager : MonoBehaviour
     private string folderPath;
     private string filePath;
     public string fileName;
+    public string fileName1;
     public Mode mode;
     
 
@@ -54,8 +55,8 @@ public class ScanDataManager : MonoBehaviour
         }
         else if(Input.GetKeyDown(KeyCode.W))
         {
-            CurrentScanImage = new Texture2D(2, 2);
-            imageAnalysis.ProcessAnalysis(CurrentScanImage);
+            string test = "C:\\Users\\Munser01\\Documents\\GitHub\\Scaner2Unity\\ScanProject\\Assets\\StreamingAssets\\DataFiles\\";
+            LoadTexture(test + fileName1 + ".jpg");
         }
       
     }
@@ -79,16 +80,17 @@ public class ScanDataManager : MonoBehaviour
             Debug.Log("시도: LoadImage 호출");
             CurrentScanImage.LoadImage(fileData); // 이미지 로드 (예외 발생 가능)
             Debug.Log("로드 성공");
-            //switch (mode)
-            //{
-            //    case Mode.Tuning:
-            //        offsetTuner.OffSetInit(CurrentScanImage);
-            //        break;
-            //    case Mode.Game:
-            //        imageAnalysis.ProcessAnalysis(CurrentScanImage);
-            //        break;
-            //}
-            imageAnalysis.ProcessAnalysis(CurrentScanImage);
+        //switch (mode)
+        //{
+        //    case Mode.Tuning:
+        //        offsetTuner.OffSetInit(CurrentScanImage);
+        //        break;
+        //    case Mode.Game:
+        //        imageAnalysis.ProcessAnalysis(CurrentScanImage);
+        //        break;
+        //}
+        //imageAnalysis.ProcessAnalysis(CurrentScanImage);
+        StartCoroutine(imageAnalysis.ProcessAnalysisCoroutine(CurrentScanImage));
         //}
         //catch (Exception ex)
         //{

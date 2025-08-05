@@ -6,6 +6,7 @@ using OpenCVForUnity.UnityUtils;
 //using OpenCvSharp;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +23,7 @@ public class ObjectSpawner : MonoBehaviour
     private GameObject nameObject;
     private GameObject myObject;
     private Renderer renderer;
+    public BoxCollider col;
     ////�ָ� nameTagManager�� ����
     //if (isCropName)
     //{
@@ -44,8 +46,9 @@ public class ObjectSpawner : MonoBehaviour
     public GameObject CreatObject()
     {
         myObject = CustomJsonManager.jsonManager.objectList[currentScanData.objectID];
-
-        GameObject ob = Instantiate(myObject); //내오브젝트 생성
+        GetSpawnPos(myObject);
+       
+        GameObject ob = Instantiate(myObject, GetSpawnPos(myObject) , Quaternion.identity); //내오브젝트 생성
         GameObject nameTagOb = Instantiate(nameObject, canvas.transform); // 내오브젝트에 달릴 이름생성
         nameTagOb.GetComponent<NameTagController>().targetHeadPos = ob.GetComponent<ObjectController>().namePos; //이름표가 따라다닐 타겟
         followTarget.target = ob.transform;
@@ -74,5 +77,20 @@ public class ObjectSpawner : MonoBehaviour
                 renderer.material.mainTexture = drawing;
             }
         }
+    }
+    private Vector3 GetSpawnPos(GameObject ob)
+    {
+       ObjectController obCon =  ob.GetComponent<ObjectController>();
+        Bounds bounds = col.bounds;
+        float randX = Random.Range(bounds.min.x, bounds.max.x);
+        float randZ = Random.Range(bounds.min.z, bounds.max.z);
+        float randY = transform.position.y;
+        if (obCon.type == ObjectType.Fariy)
+        {
+            randY = Random.Range(bounds.min.y, bounds.max.y);
+        }
+       Vector3 targetPosition = new Vector3(randX, randY, randZ);
+
+        return targetPosition;
     }
 }

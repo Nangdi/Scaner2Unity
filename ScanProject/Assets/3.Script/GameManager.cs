@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    //서있는 모션 시간 최소 최대
+    //걷기 : 모션 확률 
+    //
     void Start()
     {
         
