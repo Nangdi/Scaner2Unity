@@ -12,6 +12,8 @@ using UnityEngine.UI;
 
 public class ObjectSpawner : MonoBehaviour
 {
+  
+
     public OpenCVForUnity.CoreModule.Mat nameAreaMat;        // �̸��� ���� ����
     public OpenCVForUnity.CoreModule.Mat drawingAreaMat;     // ��ĥ ������ �ִ� ����
     public ObjectScanData currentScanData;
@@ -22,6 +24,8 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField]
     private GameObject nameObject;
     private GameObject myObject;
+    public GameObject effectOb;
+    public Transform[] spawnPos;
     private Renderer renderer;
     public BoxCollider col;
     ////�ָ� nameTagManager�� ����
@@ -43,12 +47,10 @@ public class ObjectSpawner : MonoBehaviour
     //Texture2D nameTagTex = new Texture2D(nameTagMat.cols(), nameTagMat.rows(), TextureFormat.RGBA32, false);
     //OpenCVForUnity.UnityUtils.Utils.matToTexture2D(nameTagMat, nameTagTex);
     //nameTagManager.test.texture = nameTagTex;
-    public GameObject CreatObject()
+    public GameObject CreatObject(Transform tran)
     {
         myObject = CustomJsonManager.jsonManager.objectList[currentScanData.objectID];
-        GetSpawnPos(myObject);
-       
-        GameObject ob = Instantiate(myObject, GetSpawnPos(myObject) , Quaternion.identity); //내오브젝트 생성
+        GameObject ob = Instantiate(myObject, tran.position, Quaternion.identity); //내오브젝트 생성
         GameObject nameTagOb = Instantiate(nameObject, canvas.transform); // 내오브젝트에 달릴 이름생성
         nameTagOb.GetComponent<NameTagController>().targetHeadPos = ob.GetComponent<ObjectController>().namePos; //이름표가 따라다닐 타겟
         followTarget.target = ob.transform;
@@ -78,7 +80,7 @@ public class ObjectSpawner : MonoBehaviour
             }
         }
     }
-    private Vector3 GetSpawnPos(GameObject ob)
+    public Vector3 GetSpawnPos(GameObject ob)
     {
        ObjectController obCon =  ob.GetComponent<ObjectController>();
         Bounds bounds = col.bounds;
@@ -92,5 +94,14 @@ public class ObjectSpawner : MonoBehaviour
        Vector3 targetPosition = new Vector3(randX, randY, randZ);
 
         return targetPosition;
+    }
+    public void EffectSpawn()
+    {
+      int random = Random.Range(0, 3);
+       GameObject spawnOb = Instantiate(effectOb, spawnPos[random].position, Quaternion.identity);
+        SpawnEffectController SEC;
+        spawnOb.TryGetComponent(out SEC);
+        myObject =  CustomJsonManager.jsonManager.objectList[currentScanData.objectID];
+        SEC.targetPosition = GetSpawnPos(myObject);
     }
 }

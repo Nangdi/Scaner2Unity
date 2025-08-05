@@ -80,7 +80,7 @@ public class ImageAnalysis : MonoBehaviour
         objectSpawner.nameAreaMat = nameTagMat;
         objectSpawner.currentScanData = obScanData;
 
-        go= objectSpawner.CreatObject();
+        objectSpawner.EffectSpawn();
 
         ////애를 nameTagManager로 전달
         //if (isCropName)
@@ -141,7 +141,7 @@ public class ImageAnalysis : MonoBehaviour
         objectSpawner.nameAreaMat = nameTagMat;
         objectSpawner.currentScanData = obScanData;
 
-        go = objectSpawner.CreatObject();
+        objectSpawner.EffectSpawn();
     }
     public Mat CroppedImage(MatOfPoint2f markerCorners , ObjectScanData data,bool isName)
     {
