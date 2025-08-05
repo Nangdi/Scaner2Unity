@@ -19,7 +19,7 @@ public class SpawnEffectController : MonoBehaviour
     }
     private void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * 5);
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * 10);
         float distance = Vector3.Distance(transform.position, targetPosition);
         if (distance < 0.1f)
         {
