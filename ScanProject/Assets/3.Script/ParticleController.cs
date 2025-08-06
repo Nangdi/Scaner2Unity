@@ -13,4 +13,8 @@ public class ParticleController : MonoBehaviour
     {
         particle[num].Play();
     }
+    public void StopParticle(int num)
+    {
+        particle[num].Stop();
+    }
 }

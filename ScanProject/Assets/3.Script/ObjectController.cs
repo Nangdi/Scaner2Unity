@@ -21,7 +21,7 @@ public enum ObjectType
 }
 public class ObjectController : MonoBehaviour
 {
-
+    private ParticleController particleController;
     public State state;
     public ObjectType type;
     [SerializeField]
@@ -40,17 +40,17 @@ public class ObjectController : MonoBehaviour
     public int percentChance = 50;
     private void Start()
     {
+        TryGetComponent(out particleController);
+        col = GameObject.FindGameObjectWithTag("bounds").GetComponent<BoxCollider>();
         offsetTuner.go = gameObject;
         StartCoroutine(BehaviorLoop());
         CameraDir = new Vector3(Camera.main.transform.position.x, transform.position.y, Camera.main.transform.position.z);
-        col = GameObject.FindGameObjectWithTag("bounds").GetComponent<BoxCollider>();
      
     }
     private void Update()
     {
         if (state != State.Walk) return;
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * 5);
-
         LookAtDir = targetPosition;
         LookAtDir.y = transform.position.y;
         transform.LookAt(LookAtDir);
@@ -59,6 +59,7 @@ public class ObjectController : MonoBehaviour
         {
             SetState(State.Idle);
             //transform.LookAt(CameraDir);
+            
         }
     }
     
@@ -70,11 +71,18 @@ public class ObjectController : MonoBehaviour
             case State.Idle:
                 state = State.Idle;
                 animator.SetBool("isWalking", false);
+                if (type == ObjectType.Fariy)
+                {
+                    particleController.StopParticle(2);
+                }
                 break;
             case State.Walk:
                 state = State.Walk;
                 animator.SetBool("isWalking", true);
-              
+                if (type == ObjectType.Fariy)
+                {
+                    particleController.playParticle(2);
+                }
                 break;
             case State.Reaction1:
                 state = State.Reaction1;
