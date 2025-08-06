@@ -1,9 +1,15 @@
-using OpenCvSharp.Demo;
+ï»¿using OpenCvSharp.Demo;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using System.Threading.Tasks;
+using UnityEngine.Networking;
+using OpenCVForUnity.ImgcodecsModule;
+using OpenCVForUnity.CoreModule;
+using OpenCVForUnity.ImgprocModule;
+using OpenCvSharp;
 
 public class ScanDataManager : MonoBehaviour
 {
@@ -15,11 +21,12 @@ public class ScanDataManager : MonoBehaviour
     [SerializeField]
     private ImageAnalysis imageAnalysis;
 
-    [Header("ScanFile°¨½Ã")]
+    [Header("ScanFileê°ì‹œ")]
     private FileSystemWatcher watcher;
 
 
     public Texture2D CurrentScanImage ;
+    public Texture2D TestImage ;
     private string folderPath;
     private string filePath;
     public string fileName;
@@ -29,14 +36,15 @@ public class ScanDataManager : MonoBehaviour
 
     void Awake()
     {
-       
-        folderPath = Path.Combine(Application.streamingAssetsPath, "DataFiles");
 
-        // Æú´õ°¡ ¾øÀ¸¸é »ı¼º
+        //folderPath = Path.Combine(Application.streamingAssetsPath, "DataFiles");
+        folderPath = "C:\\scanFile";
+
+        // í´ë”ê°€ ì—†ìœ¼ë©´ ìƒì„±
         if (!Directory.Exists(folderPath))
         {
             Directory.CreateDirectory(folderPath);
-            Debug.Log(" Æú´õ »ı¼ºµÊ: " + folderPath);
+            Debug.Log(" í´ë” ìƒì„±ë¨: " + folderPath);
         }
 
     }
@@ -58,44 +66,98 @@ public class ScanDataManager : MonoBehaviour
             string test = "C:\\Users\\Munser01\\Documents\\GitHub\\Scaner2Unity\\ScanProject\\Assets\\StreamingAssets\\DataFiles\\";
             LoadTexture(test + fileName1 + ".jpg");
         }
-      
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+        }
+
+
     }
     private void OnNewScan(object sender, FileSystemEventArgs e)
     {
-        Debug.Log($"»õ·Î¿î ½ºÄµ °¨Áö: {e.FullPath}");
-        MainThreadDispatcher.Enqueue(() =>
-        {
-            LoadTexture(e.FullPath); // ¿©±â¼­ Texture2D »ı¼º + LoadImage °¡´É
-        });
+        Debug.Log($"ìƒˆë¡œìš´ ìŠ¤ìº” ê°ì§€: {e.FullPath}");
+        //MainThreadDispatcher.Enqueue(() =>
+        //{
+        //    LoadTexture(e.FullPath); // ì—¬ê¸°ì„œ Texture2D ìƒì„± + LoadImage ê°€ëŠ¥
+        //});
+          LoadTexture(e.FullPath);
     }
 
-    private void LoadTexture(string path)
+    private async void LoadTexture(string path)
     {
-    
-        //try
-        //{
-            byte[] fileData = File.ReadAllBytes(path);
-            Debug.Log("½Ãµµ: Texture2D »ı¼º");
-            CurrentScanImage = new Texture2D(2, 2); // LoadImage°¡ »çÀÌÁî µ¤¾î¾¸
-            Debug.Log("½Ãµµ: LoadImage È£Ãâ");
-            CurrentScanImage.LoadImage(fileData); // ÀÌ¹ÌÁö ·Îµå (¿¹¿Ü ¹ß»ı °¡´É)
-            Debug.Log("·Îµå ¼º°ø");
-        //switch (mode)
-        //{
-        //    case Mode.Tuning:
-        //        offsetTuner.OffSetInit(CurrentScanImage);
-        //        break;
-        //    case Mode.Game:
-        //        imageAnalysis.ProcessAnalysis(CurrentScanImage);
-        //        break;
-        //}
-        imageAnalysis.ProcessAnalysis(CurrentScanImage);
-        //StartCoroutine(imageAnalysis.ProcessAnalysisCoroutine(CurrentScanImage));
-        //}
-        //catch (Exception ex)
-        //{
-        //    Debug.LogError("ÀÌ¹ÌÁö ·Îµå ½ÇÆĞ: " + ex.Message);
-        //}
+        OpenCVForUnity.CoreModule.Mat scannedMat = await Task.Run(() =>
+        {
+            byte[] imageBytes = File.ReadAllBytes(path);
 
+            OpenCVForUnity.CoreModule.MatOfByte mob = new OpenCVForUnity.CoreModule.MatOfByte(imageBytes);
+            OpenCVForUnity.CoreModule.Mat mat = Imgcodecs.imdecode(mob, Imgcodecs.IMREAD_COLOR);
+
+            // ğŸ”„ BGR â†’ RGB ë³€í™˜
+            Imgproc.cvtColor(mat, mat, Imgproc.COLOR_BGR2RGB);
+
+            return mat;
+        });
+
+        imageAnalysis.ProcessAnalysis(scannedMat);
+
+
+    }
+    IEnumerator LoadImageFromFile(string path)
+    {
+        using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture("file://" + path))
+        {
+            float start = Time.realtimeSinceStartup;
+            yield return uwr.SendWebRequest();
+
+            if (uwr.result == UnityWebRequest.Result.Success)
+            {
+                yield return null;
+                float afterDownload = Time.realtimeSinceStartup;
+                byte[] fileData = File.ReadAllBytes(path);
+
+
+                Texture2D tex = new Texture2D(2, 2);
+                tex.LoadImage(fileData);  // ì´ê²Œ GPU 
+                yield return null; // í•œ í”„ë ˆì„ ì‰¬ê³ 
+
+                float afterGetContent = Time.realtimeSinceStartup;
+
+                CurrentScanImage = tex;
+                yield return null; // ë‹¤ì‹œ í•œ í”„ë ˆì„ ì‰¬ê³ 
+                float afterAssign = Time.realtimeSinceStartup;
+                //imageAnalysis.ProcessAnalysis(CurrentScanImage);
+                Debug.Log("ë¡œë“œ ì„±ê³µ");
+                Debug.Log($"ë‹¤ìš´ë¡œë“œ ì‹œê°„: {afterDownload - start:F4}s");
+                Debug.Log($"í…ìŠ¤ì²˜ ìƒì„± ì‹œê°„: {afterGetContent - afterDownload:F4}s");
+                Debug.Log($"í…ìŠ¤ì²˜ í• ë‹¹ ì‹œê°„: {afterAssign - afterGetContent:F4}s");
+            }
+            else
+            {
+                Debug.LogError("ì´ë¯¸ì§€ ë¡œë“œ ì‹¤íŒ¨: " + uwr.error);
+            }
+        }
+    }
+    private async Task WaitForFileAvailable(string path)
+    {
+        for (int i = 0; i < 10; i++) // ìµœëŒ€ 1ì´ˆê¹Œì§€ ì‹œë„
+        {
+            try
+            {
+                using (FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    if (stream.Length > 0)
+                    {
+                        return;
+                    }
+                }
+            }
+            catch (IOException)
+            {
+                // íŒŒì¼ì´ ì•„ì§ ì €ì¥ ì¤‘ì´ë©´ ì˜ˆì™¸ ë°œìƒ
+            }
+
+            await Task.Delay(100); // 0.1ì´ˆ ëŒ€ê¸° í›„ ë‹¤ì‹œ ì‹œë„
+        }
+
+        Debug.LogError("íŒŒì¼ì´ ì—´ë¦¬ì§€ ì•Šê±°ë‚˜ ì €ì¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤: " + path);
     }
 }

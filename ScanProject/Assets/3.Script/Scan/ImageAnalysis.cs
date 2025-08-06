@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.Diagnostics;
 using UnityEngine.UI;
 using static UnityEngine.EventSystems.EventTrigger;
+using System.Threading.Tasks;
 
 public class ImageAnalysis : MonoBehaviour
 {
@@ -24,12 +25,14 @@ public class ImageAnalysis : MonoBehaviour
     public ObjectSpawner objectSpawner;
 
     public GameObject go;
+    
     private ObjectScanData obScanData;
     public RawImage debugImage;
     Renderer renderer;
     Texture2D resultTex;
     protected Mat inputImage;
     protected Mat nameImage;
+    [SerializeField]
     public DetectInfo detectInfo;
     protected Point startPoint;
     public bool isOutlineEnabled = false;
@@ -43,45 +46,23 @@ public class ImageAnalysis : MonoBehaviour
     {
     }
 
-   
-    public virtual void ProcessAnalysis(Texture2D scannedTexture)
-    {
 
+    public async void ProcessAnalysis(Mat scannedMat)
+    {
+        Mat imageMat = scannedMat;
 
         //Tex ->Mat 변환
-        Mat imageMat = new Mat(scannedTexture.height, scannedTexture.width, CvType.CV_8UC3).clone();
-        OpenCVForUnity.UnityUtils.Utils.texture2DToMat(scannedTexture, imageMat);
-        nameImage = imageMat.clone();
-        Core.flip(nameImage, nameImage, 0); // X축 기준 좌우 반전
-        //scannedTexture Marker 정보 가져오기
-        detectInfo = arucoMarkerDetector.GetDetectInfo(imageMat);
-        imageMat = ExpandCropedMat(detectInfo.scanMat, 1.5f);
-        Core.flip(imageMat, imageMat, 0); // X축 기준 좌우 반전
-        Texture2D debugTex = new Texture2D(imageMat.cols(), imageMat.rows(), TextureFormat.RGBA32, false);
-        OpenCVForUnity.UnityUtils.Utils.matToTexture2D(imageMat, debugTex);
-
-        arucoMarkerDetector.ScanImage.texture = debugTex;
-        inputImage = imageMat;
-
-        //Point markerPoint = scanInfo.standardOffset;
-
-        obScanData = CustomJsonManager.jsonManager.dataList[detectInfo.markerId];
-        ObjectScanData nameInfoData = CustomJsonManager.jsonManager.dataList[3];
-        UnityEngine.Debug.Log("Detected markerID: " + detectInfo.markerId);
-
-        MatOfPoint2f markerCorners = new MatOfPoint2f(detectInfo.markerCorner);
+        //await MainThreadDispatcher.AwaitOnMainThread(() =>
+        //{
+        //    imageMat = new Mat(scannedTexture.height, scannedTexture.width, CvType.CV_8UC3).clone();
+        //    OpenCVForUnity.UnityUtils.Utils.texture2DToMat(scannedTexture, imageMat);
+        //});
 
 
 
-        Mat cropped = CroppedImage(markerCorners, obScanData, false);
-        Mat nameTagMat = CroppedImage(markerCorners, nameInfoData, true);
-
-        objectSpawner.drawingAreaMat = cropped;
-        objectSpawner.nameAreaMat = nameTagMat;
-        objectSpawner.currentScanData = obScanData;
-
-        objectSpawner.EffectSpawn();
-
+        await Task.Run(() => OpenCVMatoud(imageMat));
+        MainThreadDispatcher.Enqueue(() => objectSpawner.EffectSpawn());
+        //objectSpawner.EffectSpawn();
         ////애를 nameTagManager로 전달
         //if (isCropName)
         //{
@@ -103,45 +84,6 @@ public class ImageAnalysis : MonoBehaviour
         //nameTagManager.test.texture = nameTagTex;
 
         // 텍스처화
-    }
-    public IEnumerator ProcessAnalysisCoroutine(Texture2D scannedTexture)
-    {
-        // Step 1: Tex -> Mat
-        Mat imageMat = new Mat(scannedTexture.height, scannedTexture.width, CvType.CV_8UC3).clone();
-        OpenCVForUnity.UnityUtils.Utils.texture2DToMat(scannedTexture, imageMat);
-        yield return null; // 한 프레임 쉬기
-
-        nameImage = imageMat.clone();
-        Core.flip(nameImage, nameImage, 0);
-        detectInfo = arucoMarkerDetector.GetDetectInfo(imageMat);
-        yield return null;
-
-        imageMat = ExpandCropedMat(detectInfo.scanMat, 1.5f);
-        Core.flip(imageMat, imageMat, 0);
-        Texture2D debugTex = new Texture2D(imageMat.cols(), imageMat.rows(), TextureFormat.RGBA32, false);
-        OpenCVForUnity.UnityUtils.Utils.matToTexture2D(imageMat, debugTex);
-        yield return null;
-
-        arucoMarkerDetector.ScanImage.texture = debugTex;
-        inputImage = imageMat;
-
-        obScanData = CustomJsonManager.jsonManager.dataList[detectInfo.markerId];
-        ObjectScanData nameInfoData = CustomJsonManager.jsonManager.dataList[3];
-        UnityEngine.Debug.Log("Detected markerID: " + detectInfo.markerId);
-
-        MatOfPoint2f markerCorners = new MatOfPoint2f(detectInfo.markerCorner);
-        yield return null;
-
-        Mat cropped = CroppedImage(markerCorners, obScanData, false);
-        Mat nameTagMat = CroppedImage(markerCorners, nameInfoData, true);
-
-        yield return null;
-
-        objectSpawner.drawingAreaMat = cropped;
-        objectSpawner.nameAreaMat = nameTagMat;
-        objectSpawner.currentScanData = obScanData;
-
-        objectSpawner.EffectSpawn();
     }
     public Mat CroppedImage(MatOfPoint2f markerCorners , ObjectScanData data,bool isName)
     {
@@ -244,5 +186,39 @@ public class ImageAnalysis : MonoBehaviour
         //OpenCVForUnity.UnityUtils.Utils.matToTexture2D(expandedMat, resultTex);
 
         return expandedMat;
+    }
+    public void OpenCVMatoud(Mat imageMat)
+    {
+        nameImage = imageMat.clone();
+        Core.flip(nameImage, nameImage, 0); // X축 기준 좌우 반전
+        //scannedTexture Marker 정보 가져오기
+
+        detectInfo = arucoMarkerDetector.GetDetectInfo(imageMat);
+        imageMat = ExpandCropedMat(detectInfo.scanMat, 1.5f);
+        Core.flip(imageMat, imageMat, 0); // X축 기준 좌우 반전
+        //Texture2D debugTex = new Texture2D(imageMat.cols(), imageMat.rows(), TextureFormat.RGBA32, false);
+        //OpenCVForUnity.UnityUtils.Utils.matToTexture2D(imageMat, debugTex);
+
+        //arucoMarkerDetector.ScanImage.texture = debugTex;
+        inputImage = imageMat;
+
+        //Point markerPoint = scanInfo.standardOffset;
+
+        obScanData = CustomJsonManager.jsonManager.dataList[detectInfo.markerId];
+        ObjectScanData nameInfoData = CustomJsonManager.jsonManager.dataList[3];
+        //UnityEngine.Debug.Log("Detected markerID: " + detectInfo.markerId);
+
+        MatOfPoint2f markerCorners = new MatOfPoint2f(detectInfo.markerCorner);
+
+
+
+        Mat cropped = CroppedImage(markerCorners, obScanData, false);
+        Mat nameTagMat = CroppedImage(markerCorners, nameInfoData, true);
+
+        objectSpawner.drawingAreaMat = cropped;
+        objectSpawner.nameAreaMat = nameTagMat;
+        objectSpawner.currentScanData = obScanData;
+
+      
     }
 }

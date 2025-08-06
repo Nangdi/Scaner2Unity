@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 using static OpenCVForUnityExample.ArUcoCreateMarkerExample;
 public class DetectInfo
 {
@@ -31,6 +32,7 @@ public class ArUcoMarkerDetector : MonoBehaviour
     public int markerId; 
     public Mat perspectiveMat; // 수평수직 보정후 Mat
     public Point standardOffset { get; private set; } //보정후 crop 기준 offset
+    Mat correctedMat = new Mat();
     void Start()
     {
     }
@@ -55,7 +57,7 @@ public class ArUcoMarkerDetector : MonoBehaviour
         //마커 4개인식못할시 리턴
         if (ids.total() < 4)
         {
-            Debug.LogWarning("마커가 4개 미만입니다.");
+            //Debug.LogWarning("마커가 4개 미만입니다.");
             return null;
         }
 
@@ -76,11 +78,11 @@ public class ArUcoMarkerDetector : MonoBehaviour
 
                 }
             }
-            Debug.Log("감지된 마커 ID: " + markerId);
+            //Debug.Log("감지된 마커 ID: " + markerId);
         }
         else
         {
-            Debug.Log("마커 인식 안됨");
+            //Debug.Log("마커 인식 안됨");
         }
         // 4. 각 마커의 중심점 구하기
         List<Point> centerPoints = new List<Point>();
@@ -114,14 +116,14 @@ public class ArUcoMarkerDetector : MonoBehaviour
         );
 
         // 7. Homography로 왜곡 보정
-        Mat correctedMat = new Mat();
+      
         Mat transform = Imgproc.getPerspectiveTransform(src, dst);
         Imgproc.warpPerspective(scanMat, correctedMat, transform, new Size(width, height));
 
         // 8. 디버깅용 표시
-        Texture2D debugTex = new Texture2D(correctedMat.cols(), correctedMat.rows(), TextureFormat.RGBA32, false);
-        Utils.matToTexture2D(correctedMat, debugTex);
-        correctionImage.texture = debugTex;
+        //Texture2D debugTex = new Texture2D(correctedMat.cols(), correctedMat.rows(), TextureFormat.RGBA32, false);
+        //Utils.matToTexture2D(correctedMat, debugTex);
+        //correctionImage.texture = debugTex;
 
         // 9. DetectInfo 생성 및 반환
         return new DetectInfo(correctedMat, corner, markerId);
@@ -185,5 +187,19 @@ public class ArUcoMarkerDetector : MonoBehaviour
         float aspectRatio = (float)(avgWidth / avgHeight);
         Debug.Log($"마커 사각형 비율 (가로:세로) = {avgWidth} :{avgHeight} ");
         return aspectRatio;
+    }
+
+    public async Task<DetectInfo> StartDetectAsync(Mat scanMat)
+    {
+        DetectInfo result = await Task.Run(() => GetDetectInfo(scanMat));
+
+        // Unity 메인 스레드 처리
+        Texture2D debugTex = new Texture2D(correctedMat.cols(), correctedMat.rows(), TextureFormat.RGBA32, false);
+        Utils.matToTexture2D(correctedMat, debugTex);
+        correctionImage.texture = debugTex;
+
+        // 최종 DetectInfo 만들기
+        //DetectInfo info = new DetectInfo(correctedMat, result.markerCorner, result.markerId);
+        return result;
     }
 }

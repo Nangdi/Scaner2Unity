@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class MainThreadDispatcher : MonoBehaviour
@@ -13,7 +14,24 @@ public class MainThreadDispatcher : MonoBehaviour
             _executionQueue.Enqueue(action);
         }
     }
+    public static Task AwaitOnMainThread(Action action)
+    {
+        var tcs = new TaskCompletionSource<bool>();
 
+        Enqueue(() =>
+        {
+            try
+            {
+                action?.Invoke();
+                tcs.SetResult(true);
+            }
+            catch (Exception ex)
+            {
+                tcs.SetException(ex);
+            }
+        });
+        return tcs.Task;
+    }
     void Update()
     {
         while (_executionQueue.Count > 0)
