@@ -36,6 +36,7 @@ public class ObjectController : MonoBehaviour
     private float remainingTime;
     Vector3 CameraDir = new Vector3();
     Vector3 LookAtDir = new Vector3();
+    public GameObject myNameTagOb;
 
     public int percentChance = 50;
     private void Start()

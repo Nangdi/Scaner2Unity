@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 5372248238950365364}
   - component: {fileID: 1454314384491191689}
   - component: {fileID: 2686551271004461602}
+  - component: {fileID: -8542672833465354570}
   m_Layer: 6
   m_Name: 'mouse '
   m_TagString: Untagged
@@ -111,6 +112,7 @@ MonoBehaviour:
   animator: {fileID: 5372248238950365364}
   namePos: {fileID: 7912872433888610667}
   MotionDelay: 5
+  myNameTagOb: {fileID: 0}
   percentChance: 50
 --- !u!114 &2686551271004461602
 MonoBehaviour:
@@ -127,6 +129,23 @@ MonoBehaviour:
   particle:
   - {fileID: 1049099844657201529}
   - {fileID: 8458296777309829779}
+--- !u!114 &-8542672833465354570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 975627443009429341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae21e58975821ad418aa75c929f4a714, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeTime: 0
+  correctionTime: 0
+  basedFieldCount: 0
+  calculatedLifeTime: 0
+  currentLifeTime: 0
 --- !u!1 &979559700473650756
 GameObject:
   m_ObjectHideFlags: 0

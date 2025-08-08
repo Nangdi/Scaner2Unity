@@ -33,6 +33,7 @@ public class CustomJsonManager : JsonManager
    
     private string filePath;
     private string portPath;
+    private string gameDataPath;
 
     [Header("공유데이터")]
     public List<ObjectScanData> dataList;
@@ -54,6 +55,7 @@ public class CustomJsonManager : JsonManager
         DataInit();
         filePath = Path.Combine(Application.persistentDataPath, "objectData.json");
         portPath = Path.Combine(Application.streamingAssetsPath, "port.json");
+        gameDataPath = Path.Combine(Application.streamingAssetsPath, "GameSettingData.json");
         //SaveScanData();
         dataList = LoadData();
         
@@ -92,5 +94,14 @@ public class CustomJsonManager : JsonManager
     public PortJson LoadPortData()
     {
         return LoadData<PortJson>(portPath, SavePortJson);
+    }
+    public void SaveGameSettingData()
+    {
+        GameSettingData dataJson = new GameSettingData();
+        SaveData(dataJson, gameDataPath);
+    }
+    public GameSettingData LoadGameSettingData()
+    {
+        return LoadData<GameSettingData>(gameDataPath, SaveGameSettingData);
     }
 }

@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class NameTagController : MonoBehaviour
 {
     public Transform targetHeadPos;
-
     private void Update()
     {
         if(targetHeadPos == null)

@@ -1,0 +1,10 @@
+{
+    "motionRatio": 51,
+    "WaitTimeMinMax": {
+        "x": 2.0,
+        "y": 4.0
+    },
+    "LifeTime": 600,
+    "correctionTime": 60,
+    "basedFieldCount": 5
+}
