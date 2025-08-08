@@ -36,6 +36,13 @@ public class GameManager : MonoBehaviour
     private Texture2D[] uvImages;
     public GameSettingData gameSettingData;
 
+    [Header("인게임조정값")]
+    public float HueShift =14;
+    public float Saturation =32;
+    public float Brightness =1;
+    public float Contrast =0;
+       
+
     public int ObjectCount = 0;
     private void Awake()
     {

@@ -86,6 +86,15 @@ public class CustomJsonManager : JsonManager
         PortJson portJson = new PortJson();
         SaveData(portJson, portPath);
     }
+    public void SaveGameSettingData()
+    {
+        GameSettingData dataJson = new GameSettingData();
+        SaveData(dataJson, gameDataPath);
+    }
+    public void SaveScreenToneData()
+    {
+
+    }
     public List<ObjectScanData> LoadData()
     {
         DataWrapper wrapper = LoadData<DataWrapper>(filePath, SaveScanData);
@@ -94,11 +103,6 @@ public class CustomJsonManager : JsonManager
     public PortJson LoadPortData()
     {
         return LoadData<PortJson>(portPath, SavePortJson);
-    }
-    public void SaveGameSettingData()
-    {
-        GameSettingData dataJson = new GameSettingData();
-        SaveData(dataJson, gameDataPath);
     }
     public GameSettingData LoadGameSettingData()
     {

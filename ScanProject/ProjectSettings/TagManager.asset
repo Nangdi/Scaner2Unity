@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - bounds
+  - FxTemporaire
+  - postprocessing
   layers:
   - Default
   - TransparentFX
@@ -14,7 +16,7 @@ TagManager:
   - UI
   - object1
   - object2
-  - 
+  - postProcessing
   - 
   - 
   - 

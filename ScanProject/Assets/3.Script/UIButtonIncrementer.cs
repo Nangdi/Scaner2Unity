@@ -3,13 +3,18 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.Windows.Speech;
 
 public enum VariableName
 {
     X,
     Y,
     CropSize,
-    HRatio
+    HRatio,
+    HueShift,
+    Saturation,
+    Brightness,
+    Contrast
 }
 
 
@@ -17,6 +22,7 @@ public class UIButtonIncrementer : MonoBehaviour, IPointerDownHandler, IPointerU
 {
     
     public OffsetTuner tuner;
+    public PostProcessingSetting processingSetting;
     public VariableName variableName;   // ¿¹: "int1", "float2"
     public float direction = 1f;
     public TMP_Text text;
@@ -26,17 +32,24 @@ public class UIButtonIncrementer : MonoBehaviour, IPointerDownHandler, IPointerU
     private bool isHolding = false;
     private bool stopRequested;
     private Coroutine holdCoroutine;
+
     private void Start()
     {
         cashText = text.text;
+
+        StartCoroutine(RateValueUpdate());
+    }
+    IEnumerator  RateValueUpdate()
+    {
+        yield return new WaitForSeconds(3f);
+        ModifyValue(variableName, 0);
     }
     public void OnPointerDown()
     {
         if (tuner == null) return;
         ChangeAmount();
         isHolding = true;
-        float value = tuner.ModifyValue(variableName.ToString(), direction* amount);
-        ReplaceValue(value);
+        ModifyValue(variableName, direction * amount);
         holdCoroutine = StartCoroutine(RepeatModify());
     }
 
@@ -64,8 +77,8 @@ public class UIButtonIncrementer : MonoBehaviour, IPointerDownHandler, IPointerU
         while (isHolding)
         {
         Debug.Log("¹ë·ùº¯È­");
-           float value =  tuner.ModifyValue(variableName.ToString(), direction* amount);
-            ReplaceValue(value);
+            
+            ModifyValue(variableName, direction * amount);
             if (stopRequested)
             {
                 break;
@@ -89,7 +102,21 @@ public class UIButtonIncrementer : MonoBehaviour, IPointerDownHandler, IPointerU
     }
     public void InitValue()
     {
-        float value = tuner.ModifyValue(variableName.ToString(), 0);
+        ModifyValue(variableName, 0);
+        
+    }
+    public void ModifyValue(VariableName name , float amount)
+    {
+        float value;
+        if ((int)name < 4)
+        {
+            value = tuner.ModifyValue(variableName.ToString(), amount);
+        }
+        else
+        {
+            value = processingSetting.ModifyValue(variableName.ToString(), amount);
+        }
+        Debug.Log(value);
         ReplaceValue(value);
     }
 }
