@@ -54,6 +54,7 @@ public class CustomJsonManager : JsonManager
         }
         DataInit();
         filePath = Path.Combine(Application.persistentDataPath, "objectData.json");
+        Debug.Log(filePath);
         portPath = Path.Combine(Application.streamingAssetsPath, "port.json");
         gameDataPath = Path.Combine(Application.streamingAssetsPath, "GameSettingData.json");
         //SaveScanData();
@@ -67,10 +68,10 @@ public class CustomJsonManager : JsonManager
     {
         dataList = new List<ObjectScanData>()
         {
-            new ObjectScanData { objectID = 0, cropSize = 1509, startOffset = 0, offsetX = 0, offsetY = 300, hRatio =1f},
-            new ObjectScanData { objectID = 1, cropSize = 1550, startOffset = 0, offsetX = 0, offsetY = 300, hRatio =1f},
-            new ObjectScanData { objectID = 2, cropSize = 1550, startOffset = 0, offsetX = 0, offsetY = 300, hRatio =1f},
-            new ObjectScanData { objectID = 3, cropSize = 367, startOffset = 0, offsetX = 478, offsetY = 0, hRatio = 3.12f}
+            new ObjectScanData { objectID = 0, cropSize = 1975, startOffset = 0, offsetX = 0, offsetY = 0, hRatio =1f},
+            new ObjectScanData { objectID = 1, cropSize = 1350, startOffset = 0, offsetX = 695, offsetY = 82, hRatio =1f},
+            new ObjectScanData { objectID = 2, cropSize = 1354, startOffset = 0, offsetX = 713, offsetY = 29, hRatio =1f},
+            new ObjectScanData { objectID = 3, cropSize = 354, startOffset = 0, offsetX = 1787, offsetY = -11, hRatio = 3.85f }
         };
 
     }
