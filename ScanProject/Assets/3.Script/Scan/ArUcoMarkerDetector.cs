@@ -2,7 +2,6 @@ using OpenCVForUnity.ArucoModule;
 using OpenCVForUnity.CoreModule;
 using OpenCVForUnity.ImgprocModule;
 using OpenCVForUnity.UnityUtils;
-using OpenCvSharp.Demo;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

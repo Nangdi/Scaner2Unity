@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 using OpenCVForUnity.CoreModule;
 using OpenCVForUnity.ImgcodecsModule;
-using OpenCvSharp;
 using System.Text;
 using Microsoft.SqlServer.Server;
 using OpenCVForUnity.ImgprocModule;

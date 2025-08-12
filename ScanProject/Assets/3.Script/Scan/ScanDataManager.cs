@@ -1,5 +1,4 @@
-﻿using OpenCvSharp.Demo;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +8,6 @@ using UnityEngine.Networking;
 using OpenCVForUnity.ImgcodecsModule;
 using OpenCVForUnity.CoreModule;
 using OpenCVForUnity.ImgprocModule;
-using OpenCvSharp;
 
 public class ScanDataManager : MonoBehaviour
 {

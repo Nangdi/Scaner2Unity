@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using UnityEngine.Timeline;
 using OpenCVForUnity.UnityUtils;
 using OpenCVForUnity.ImgcodecsModule;
-using OpenCvSharp.Demo;
 using System;
 public class OffsetTuner : ImageAnalysis 
 {
