@@ -59,6 +59,7 @@ public class ObjectSpawner : MonoBehaviour
         Texture2D nameTexture = mat2Text(nameAreaMat);
 
         Text2Model(modelTexture, nameTexture, ob, nameTagOb);
+        GameManager.instance.ObjectCount++;
         return ob;
 
 

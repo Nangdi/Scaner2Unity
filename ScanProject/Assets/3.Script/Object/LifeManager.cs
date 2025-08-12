@@ -29,6 +29,7 @@ public class LifeManager : MonoBehaviour
             {
                 TryGetComponent(out objectController);
                 //이름표도 삭제
+                GameManager.instance.ObjectCount--;
                 Destroy(objectController.myNameTagOb);
                 Destroy(gameObject);
                 yield break; 

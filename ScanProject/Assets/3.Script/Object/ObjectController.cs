@@ -38,6 +38,8 @@ public class ObjectController : MonoBehaviour
     Vector3 LookAtDir = new Vector3();
     public GameObject myNameTagOb;
 
+    private Vector2 minMaxDelay = new Vector2();
+
     public int percentChance = 50;
     private void Start()
     {
@@ -46,7 +48,9 @@ public class ObjectController : MonoBehaviour
         offsetTuner.go = gameObject;
         StartCoroutine(BehaviorLoop());
         CameraDir = new Vector3(Camera.main.transform.position.x, transform.position.y, Camera.main.transform.position.z);
-     
+
+        LoadData();
+
     }
     private void Update()
     {
@@ -115,7 +119,7 @@ public class ObjectController : MonoBehaviour
             if (state == State.Idle && remainingTime > MotionDelay)
             {
                 Debug.Log("모션딜레이설정");
-                MotionDelay = Random.Range(2, 5);
+                MotionDelay = Random.Range((int)minMaxDelay.x, (int)minMaxDelay.x+1);
                 Debug.Log("랜덤인덱스");
                 int randomIndex = Random.Range(1, 101);
                 if (randomIndex <= percentChance)
@@ -129,7 +133,7 @@ public class ObjectController : MonoBehaviour
                     int random = Random.Range(2, 4);
                     //4 5
                     //int index = randomIndex;
-                    if(random == 2 && type == ObjectType.Mouse)
+                    if (random == 2 && type == ObjectType.Mouse)
                     {
                         transform.LookAt(CameraDir);
 
@@ -158,5 +162,12 @@ public class ObjectController : MonoBehaviour
         targetPosition = new Vector3(randX, randY, randZ);
 
         return targetPosition;
+    }
+    private void LoadData()
+    {
+        minMaxDelay = GameManager.instance.gameSettingData.WaitTimeMinMax;
+        Debug.Log($"모션대기시간 {minMaxDelay}");
+        percentChance = GameManager.instance.gameSettingData.motionRatio;
+        Debug.Log($"모션비율 {percentChance}");
     }
 }

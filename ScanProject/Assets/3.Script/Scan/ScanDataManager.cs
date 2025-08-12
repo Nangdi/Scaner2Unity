@@ -58,12 +58,12 @@ public class ScanDataManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            string test = "C:\\Users\\Munser01\\Documents\\GitHub\\Scaner2Unity\\ScanProject\\Assets\\StreamingAssets\\DataFiles\\";
+            string test = "C:\\scanFile\\";
             LoadTexture(test+ fileName+".jpg");
         }
         else if(Input.GetKeyDown(KeyCode.W))
         {
-            string test = "C:\\Users\\Munser01\\Documents\\GitHub\\Scaner2Unity\\ScanProject\\Assets\\StreamingAssets\\DataFiles\\";
+            string test = "C:\\scanFile\\";
             LoadTexture(test + fileName1 + ".jpg");
         }
         else if (Input.GetKeyDown(KeyCode.E))

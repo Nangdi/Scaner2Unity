@@ -1403,7 +1403,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &375494695
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17364,8 +17364,8 @@ MonoBehaviour:
   imageAnalysis: {fileID: 594613485}
   CurrentScanImage: {fileID: 0}
   TestImage: {fileID: 2800000, guid: 15ee5f68db177144e92525d1a281c845, type: 3}
-  fileName: 20250806115342
-  fileName1: 20250806100523
+  fileName: 20250812152817
+  fileName1: 20250812152757
   mode: 0
 --- !u!1 &1634085030
 GameObject:
@@ -31267,6 +31267,7 @@ GameObject:
   - component: {fileID: 682687718712320709}
   - component: {fileID: 4817373607646477149}
   - component: {fileID: 1515899128299651640}
+  - component: {fileID: 4817373607646477150}
   m_Layer: 0
   m_Name: Remesh_1
   m_TagString: Untagged
@@ -49499,6 +49500,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 986387481207880856}
   m_Mesh: {fileID: -1167225065619425560, guid: 0599e9b0d07e12146b082eb648270d3d, type: 3}
+--- !u!114 &4817373607646477150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 986387481207880856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a673e27bb0b30dc4aba54d0d0f9bd855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1
 --- !u!33 &4824790806000081853
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -55286,6 +55300,7 @@ GameObject:
   - component: {fileID: 6786161291807288222}
   - component: {fileID: 7616581621662291515}
   - component: {fileID: 1487322342564432852}
+  - component: {fileID: 7616581621662291516}
   m_Layer: 0
   m_Name: Remesh_3_2
   m_TagString: Untagged
@@ -61568,6 +61583,7 @@ GameObject:
   - component: {fileID: 4174730008149841060}
   - component: {fileID: 1638450369856300828}
   - component: {fileID: 13091953418276939}
+  - component: {fileID: 7518741892221066110}
   m_Layer: 0
   m_Name: Remesh_2_2
   m_TagString: Untagged
@@ -61575,6 +61591,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &7518741892221066110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7518741892221066109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a673e27bb0b30dc4aba54d0d0f9bd855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1
 --- !u!4 &7522914011592447002
 Transform:
   m_ObjectHideFlags: 0
@@ -61705,7 +61734,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7618214594777149300}
   serializedVersion: 2
-  m_LocalRotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: 6.123234e-17}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 90.12274, y: 44.25424, z: 12.037495}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -61873,6 +61902,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6125702713617176786}
   m_Mesh: {fileID: -4312058679417539915, guid: 0599e9b0d07e12146b082eb648270d3d, type: 3}
+--- !u!114 &7616581621662291516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6125702713617176786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a673e27bb0b30dc4aba54d0d0f9bd855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1
 --- !u!1 &7618214594777149300
 GameObject:
   m_ObjectHideFlags: 0
@@ -61884,6 +61926,7 @@ GameObject:
   - component: {fileID: 7559455583202528831}
   - component: {fileID: 2054180090906293024}
   - component: {fileID: 4204046697909344772}
+  - component: {fileID: 7618214594777149301}
   m_Layer: 0
   m_Name: Remesh_4_2
   m_TagString: Untagged
@@ -61891,6 +61934,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &7618214594777149301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7618214594777149300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a673e27bb0b30dc4aba54d0d0f9bd855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1
 --- !u!1 &7618591876056309483
 GameObject:
   m_ObjectHideFlags: 0
@@ -63897,6 +63953,7 @@ GameObject:
   - component: {fileID: 7838475114616778856}
   - component: {fileID: 334566759705591192}
   - component: {fileID: 1196088156879219446}
+  - component: {fileID: 8048831548007415247}
   m_Layer: 0
   m_Name: Volume_Mesher_4_remesh
   m_TagString: Untagged
@@ -63904,6 +63961,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8048831548007415247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8048831548007415246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a673e27bb0b30dc4aba54d0d0f9bd855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1
 --- !u!33 &8049699419415725712
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -64047,6 +64117,7 @@ GameObject:
   - component: {fileID: 7750738267611484296}
   - component: {fileID: 3227512642581799232}
   - component: {fileID: 7723582629342639243}
+  - component: {fileID: 8090353321515462493}
   m_Layer: 0
   m_Name: Remesh_4
   m_TagString: Untagged
@@ -64054,6 +64125,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8090353321515462493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8090353321515462492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a673e27bb0b30dc4aba54d0d0f9bd855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1
 --- !u!1 &8094529705921984940
 GameObject:
   m_ObjectHideFlags: 0
@@ -65219,6 +65303,7 @@ GameObject:
   - component: {fileID: 645128048526314590}
   - component: {fileID: 3824004688785353773}
   - component: {fileID: 6292017334583844051}
+  - component: {fileID: 8363411594181355497}
   m_Layer: 0
   m_Name: Volume_Mesher_4_remesh_1
   m_TagString: Untagged
@@ -65226,6 +65311,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8363411594181355497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8363411594181355496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a673e27bb0b30dc4aba54d0d0f9bd855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1
 --- !u!23 &8364847735985716903
 MeshRenderer:
   m_ObjectHideFlags: 0

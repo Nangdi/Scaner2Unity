@@ -7,8 +7,10 @@ using UnityEngine.UI;
 public class GameSettingData
 {
    
+    //ObjectController
     public int motionRatio = 50;
     public Vector2 WaitTimeMinMax = new Vector2(2, 4);
+    //LifeManager
     public int LifeTime = 600;
     public int correctionTime= 60;
     public int basedFieldCount = 5;
@@ -34,6 +36,7 @@ public class GameManager : MonoBehaviour
     private RawImage uvFrame;
     [SerializeField]
     private Texture2D[] uvImages;
+    [Header("Json조정값")]
     public GameSettingData gameSettingData;
 
     [Header("인게임조정값")]
@@ -42,6 +45,7 @@ public class GameManager : MonoBehaviour
     public float Brightness =1;
     public float Contrast =0;
        
+
 
     public int ObjectCount = 0;
     private void Awake()
