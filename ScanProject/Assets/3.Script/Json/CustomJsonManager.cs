@@ -38,7 +38,7 @@ public class CustomJsonManager : JsonManager
     [Header("공유데이터")]
     public List<ObjectScanData> dataList;
     public List<GameObject> objectList;
-
+    public GameSettingData settingData;
     // Update is called once per frame
     private void Awake()
     {
@@ -59,7 +59,7 @@ public class CustomJsonManager : JsonManager
         gameDataPath = Path.Combine(Application.streamingAssetsPath, "GameSettingData.json");
         //SaveScanData();
         dataList = LoadData();
-        
+        settingData = LoadGameSettingData();
     }
 
 

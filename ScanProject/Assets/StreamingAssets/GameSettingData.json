@@ -1,10 +1,12 @@
 {
-    "motionRatio": 51,
+    "motionRatio": 50,
     "WaitTimeMinMax": {
         "x": 2.0,
         "y": 4.0
     },
     "LifeTime": 600,
     "correctionTime": 60,
-    "basedFieldCount": 5
+    "basedFieldCount": 5,
+    "testFileName1": "20250812152757",
+    "testFileName2": "20250812152945"
 }

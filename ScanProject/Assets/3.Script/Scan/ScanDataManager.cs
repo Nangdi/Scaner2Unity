@@ -21,14 +21,14 @@ public class ScanDataManager : MonoBehaviour
 
     [Header("ScanFile감시")]
     private FileSystemWatcher watcher;
-
+    private string[] excludeFileNames = new string[2];
 
     public Texture2D CurrentScanImage ;
     public Texture2D TestImage ;
     private string folderPath;
     private string filePath;
-    public string fileName;
     public string fileName1;
+    public string fileName2;
     public Mode mode;
     
 
@@ -51,18 +51,23 @@ public class ScanDataManager : MonoBehaviour
         watcher = new FileSystemWatcher(folderPath, "*.jpg");
         watcher.Created += OnNewScan;
         watcher.EnableRaisingEvents = true;
+
+        fileName1 = CustomJsonManager.jsonManager.settingData.testFileName1;
+        fileName2 = CustomJsonManager.jsonManager.settingData.testFileName2;
+        CleanOldFiles();
+
     }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
             string test = "C:\\scanFile\\";
-            LoadTexture(test+ fileName+".jpg");
+            LoadTexture(test+ fileName1+".jpg");
         }
         else if(Input.GetKeyDown(KeyCode.W))
         {
             string test = "C:\\scanFile\\";
-            LoadTexture(test + fileName1 + ".jpg");
+            LoadTexture(test + fileName2 + ".jpg");
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
@@ -79,7 +84,41 @@ public class ScanDataManager : MonoBehaviour
         //});
           LoadTexture(e.FullPath);
     }
+    private void CleanOldFiles()
+    {
+        Debug.Log("파일삭제");
+        try
+        {
+            var files = Directory.GetFiles(folderPath, "*.jpg");
 
+            foreach (var file in files)
+            {
+                string fileName = Path.GetFileName(file);
+
+                // 예외 파일은 건너뜀
+                if(fileName ==fileName1 || fileName == fileName2)
+                    continue;
+
+                DateTime lastWriteTime = File.GetLastWriteTime(file);
+                if (DateTime.Now - lastWriteTime > TimeSpan.FromHours(48))
+                {
+                    try
+                    {
+                        File.Delete(file);
+                        Debug.Log($"삭제됨: {fileName}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogWarning($"파일 삭제 실패: {fileName}, 오류: {ex.Message}");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"폴더 정리 중 오류: {ex.Message}");
+        }
+    }
     private async void LoadTexture(string path)
     {
         OpenCVForUnity.CoreModule.Mat scannedMat = await Task.Run(() =>
@@ -157,5 +196,12 @@ public class ScanDataManager : MonoBehaviour
         }
 
         Debug.LogError("파일이 열리지 않거나 저장되지 않았습니다: " + path);
+    }
+    IEnumerator GetFileName()
+    {
+        yield return new WaitForSeconds(1);
+        fileName1 = GameManager.instance.gameSettingData.testFileName1;
+        fileName2 = GameManager.instance.gameSettingData.testFileName2;
+        CleanOldFiles();
     }
 }

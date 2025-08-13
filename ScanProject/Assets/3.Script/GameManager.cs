@@ -14,6 +14,8 @@ public class GameSettingData
     public int LifeTime = 600;
     public int correctionTime= 60;
     public int basedFieldCount = 5;
+    public string testFileName1;
+    public string testFileName2;
 }
 
 public class GameManager : MonoBehaviour
@@ -59,10 +61,11 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
     }
     private void Start()
     {
-        gameSettingData = CustomJsonManager.jsonManager.LoadGameSettingData();
+        gameSettingData = CustomJsonManager.jsonManager.settingData;
     }
   
     private void Update()
