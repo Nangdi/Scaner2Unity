@@ -16,9 +16,7 @@ public class GameSettingData
     public int basedFieldCount = 5;
     public string testFileName1;
     public string testFileName2;
-    public float bgmVolume= 0.5f;
-    public float bgmSpeed = 0.7f;
-    public bool bgmOnOff = true;
+   
 }
 
 public class GameManager : MonoBehaviour
