@@ -33,6 +33,7 @@ public class ImageAnalysis : MonoBehaviour
     [Header("Options")]
     public bool isOutlineEnabled = false;
     public bool isCropName;
+
     public GameObject go;
     
     private ObjectScanData obScanData;
@@ -149,10 +150,10 @@ public class ImageAnalysis : MonoBehaviour
 
         Mat cropped = CroppedImage(markerCorners, obScanData, false);
         Mat nameTagMat = CroppedImage(markerCorners, nameInfoData, true);
-        if (!isOutlineEnabled)
-        {
-            cropped = RemoveOutline(cropped);
-        }
+        //if (!isOutlineEnabled)
+        //{
+        //    cropped = RemoveOutline(cropped);
+        //}
         objectSpawner.drawingAreaMat = cropped;
         objectSpawner.nameAreaMat = nameTagMat;
         objectSpawner.currentScanData = obScanData;
