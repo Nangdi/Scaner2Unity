@@ -43,6 +43,10 @@ public class ImageAnalysis : MonoBehaviour
     [SerializeField]
     public DetectInfo detectInfo;
     protected Point startPoint;
+    private void Start()
+    {
+        
+    }
 
     public async void ProcessAnalysis(Mat scannedMat)
     {
@@ -164,5 +168,10 @@ public class ImageAnalysis : MonoBehaviour
     {
         Core.flip(mat, mat, 0);
         return mat;
+    }
+    public IEnumerator dataIntit()
+    {
+        yield return new WaitForSeconds(1);
+        isCropName = GameManager.instance.gameSettingData.useCropName;
     }
 }

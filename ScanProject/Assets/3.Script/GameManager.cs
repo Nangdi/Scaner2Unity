@@ -16,6 +16,7 @@ public class GameSettingData
     public int basedFieldCount = 5;
     public string testFileName1;
     public string testFileName2;
+    public bool useCropName = false;
    
 }
 

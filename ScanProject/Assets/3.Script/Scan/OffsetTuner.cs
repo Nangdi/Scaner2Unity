@@ -48,7 +48,7 @@ public class OffsetTuner : ImageAnalysis
     private List<UIButtonIncrementer> uIButtonIncrementers;
     void Start()
     {
-      
+        StartCoroutine(dataIntit());
     }
     
 
