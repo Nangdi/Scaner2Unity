@@ -62,7 +62,7 @@ public class ScanDataManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
             string test = "C:\\scanFile\\";
-            LoadTexture(test+ fileName1+".jpg");
+            LoadTexture(test+ fileName1+ "20250826114624.jpg");
         }
         else if(Input.GetKeyDown(KeyCode.W))
         {

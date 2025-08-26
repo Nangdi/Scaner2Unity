@@ -13,6 +13,7 @@ public class UIActiveController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             settingCanvas.SetActive(!settingCanvas.activeSelf);
+            Cursor.visible = !Cursor.visible;
         }
     }
 }

@@ -102,10 +102,11 @@ public class ArUcoMarkerDetector : MonoBehaviour
 
         // 5. 시계방향 정렬 (좌상 → 우상 → 우하 → 좌하)
         List<Point> ordered = OrderPointsClockwise(centerPoints);
-        CalculateMarkerQuadAspectRatio(ordered[0], ordered[1], ordered[2], ordered[3]);
+        Vector2 ratio = CalculateMarkerQuadAspectRatio(ordered[0], ordered[1], ordered[2], ordered[3]);
         // 6. 보정 대상 좌표 정의 (A4 비율)
         int width = 1980;
         int height = 1120;
+        Debug.Log("w : h = " + width + " : " + height);
         MatOfPoint2f src = new MatOfPoint2f(ordered.ToArray());
         MatOfPoint2f dst = new MatOfPoint2f(
             new Point(0, 0),
@@ -170,7 +171,7 @@ public class ArUcoMarkerDetector : MonoBehaviour
 
         return pts;
     }
-    public float CalculateMarkerQuadAspectRatio(Point topLeft, Point topRight, Point bottomRight, Point bottomLeft)
+    public Vector2 CalculateMarkerQuadAspectRatio(Point topLeft, Point topRight, Point bottomRight, Point bottomLeft)
     {
         // 상단, 하단 길이 (가로)
         double widthTop = Mathf.Sqrt(Mathf.Pow((float)(topRight.x - topLeft.x), 2) + Mathf.Pow((float)(topRight.y - topLeft.y), 2));
@@ -185,7 +186,7 @@ public class ArUcoMarkerDetector : MonoBehaviour
         // 비율 계산
         float aspectRatio = (float)(avgWidth / avgHeight);
         Debug.Log($"마커 사각형 비율 (가로:세로) = {avgWidth} :{avgHeight} ");
-        return aspectRatio;
+        return new Vector2((float)avgWidth , (float)avgHeight);
     }
 
     public async Task<DetectInfo> StartDetectAsync(Mat scanMat)

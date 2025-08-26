@@ -25,6 +25,7 @@ public class UnityAlwaysOnTop : MonoBehaviour
             return;
         }
 
+        Cursor.visible = false;
         // 빌드 실행 시 최상단 설정
         var windowName = Application.productName;
         IntPtr hWnd = FindWindow(null, windowName);
