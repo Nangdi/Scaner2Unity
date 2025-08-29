@@ -104,8 +104,8 @@ public class ArUcoMarkerDetector : MonoBehaviour
         List<Point> ordered = OrderPointsClockwise(centerPoints);
         Vector2 ratio = CalculateMarkerQuadAspectRatio(ordered[0], ordered[1], ordered[2], ordered[3]);
         // 6. 보정 대상 좌표 정의 (A4 비율)
-        int width = 1980;
-        int height = 1120;
+        int width = (int)ratio.x;
+        int height = (int)ratio.y;
         Debug.Log("w : h = " + width + " : " + height);
         MatOfPoint2f src = new MatOfPoint2f(ordered.ToArray());
         MatOfPoint2f dst = new MatOfPoint2f(
@@ -140,7 +140,12 @@ public class ArUcoMarkerDetector : MonoBehaviour
             new Point(0, height)
         );
     }
-
+    public void DebugCropTexture(Mat CropMat)
+    {
+        Texture2D debugTex = new Texture2D(CropMat.cols(), CropMat.rows(), TextureFormat.RGBA32, false);
+        Utils.matToTexture2D(CropMat, debugTex);
+        ScanImage.texture = debugTex;
+    }
     public Point[] GetMarkerPoints(Mat cornerMat)
     {
         double[] cornerData = new double[8]; // x1, y1, x2, y2, x3, y3, x4, y4

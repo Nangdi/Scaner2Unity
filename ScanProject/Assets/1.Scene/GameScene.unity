@@ -1686,7 +1686,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &375494695
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2743,7 +2743,7 @@ MonoBehaviour:
   kernelValue: 4
   LerpValue: 10
   isOutlineEnabled: 0
-  isCropName: 0
+  isCropName: 1
   go: {fileID: 0}
   scannedTex: {fileID: 2800000, guid: 56ed619de6ae62b418b5187687e147f4, type: 3}
   offsetX: 0
@@ -18084,8 +18084,8 @@ MonoBehaviour:
   imageAnalysis: {fileID: 594613485}
   CurrentScanImage: {fileID: 0}
   TestImage: {fileID: 2800000, guid: 15ee5f68db177144e92525d1a281c845, type: 3}
-  fileName1: 20250812152757
-  fileName2: 
+  fileName1: 20250829095152
+  fileName2: 20250829095220
   mode: 0
 --- !u!1 &1632625086
 GameObject:
@@ -26173,7 +26173,7 @@ RectTransform:
   m_Father: {fileID: 211482528}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -26247,8 +26247,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1460866429}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

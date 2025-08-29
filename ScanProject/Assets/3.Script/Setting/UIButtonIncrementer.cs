@@ -116,7 +116,6 @@ public class UIButtonIncrementer : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             value = processingSetting.ModifyValue(variableName.ToString(), amount);
         }
-        Debug.Log(value);
         ReplaceValue(value);
     }
 }

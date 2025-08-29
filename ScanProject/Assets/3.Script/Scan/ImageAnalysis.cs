@@ -48,18 +48,23 @@ public class ImageAnalysis : MonoBehaviour
         
     }
 
-    public async void ProcessAnalysis(Mat scannedMat)
+    public void ProcessAnalysis(Mat scannedMat)
     {
         Mat imageMat = scannedMat;
 
-        await Task.Run(() => OpenCVMatoud(imageMat));
+        OpenCVMatoud(imageMat);
         MainThreadDispatcher.Enqueue(() => objectSpawner.EffectSpawn());
- 
+        Mat tempMat = new Mat();
+        Core.flip(inputImage, tempMat, 0); // X축 기준  반전
+        MainThreadDispatcher.Enqueue(() => arucoMarkerDetector.DebugCropTexture(tempMat));
+        
+
+
     }
     public Mat CroppedImage(MatOfPoint2f markerCorners , ObjectScanData data,bool useNameImage)
     {
         Point[] points = markerCorners.toArray();
-        startPoint = points[0]; // ← 바로 이게 좌측 상단
+        startPoint = new Point(0, 0); ; // ← 바로 이게 좌측 상단
 
         int boxSize = data.cropSize;
         int startX = (int)Math.Round(startPoint.x) + data.offsetX;
@@ -67,7 +72,8 @@ public class ImageAnalysis : MonoBehaviour
 
         //crop하는기능
         float cropY = boxSize / data.hRatio;
-        OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(startX, startY, boxSize, (int)cropY);
+        UnityEngine.Debug.Log($"data값 : {data.offsetX} , {data.offsetY}"  );
+        OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(data.offsetX, data.offsetY, boxSize, (int)cropY);
         Mat cropped;
         if (useNameImage)
         {
@@ -137,7 +143,7 @@ public class ImageAnalysis : MonoBehaviour
         //scannedTexture Marker 정보 가져오기
 
         detectInfo = arucoMarkerDetector.GetDetectInfo(imageMat);
-        imageMat = ExpandCropedMat(detectInfo.scanMat, 1.5f);
+        imageMat = ExpandCropedMat(detectInfo.scanMat, 1.5f).clone();
         Core.flip(imageMat, imageMat, 0); // X축 기준 반전
 
         inputImage = imageMat;
@@ -174,4 +180,5 @@ public class ImageAnalysis : MonoBehaviour
         yield return new WaitForSeconds(1);
         isCropName = GameManager.instance.gameSettingData.useCropName;
     }
+  
 }
