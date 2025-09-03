@@ -1,0 +1,36 @@
+{
+    "objectDatas": [
+        {
+            "objectID": 0,
+            "cropSize": 1975,
+            "startOffset": 0,
+            "offsetX": 0,
+            "offsetY": 0,
+            "hRatio": 1.0
+        },
+        {
+            "objectID": 1,
+            "cropSize": 1404,
+            "startOffset": 0,
+            "offsetX": 825,
+            "offsetY": 428,
+            "hRatio": 1.0
+        },
+        {
+            "objectID": 2,
+            "cropSize": 1410,
+            "startOffset": 0,
+            "offsetX": 845,
+            "offsetY": 377,
+            "hRatio": 1.0
+        },
+        {
+            "objectID": 3,
+            "cropSize": 464,
+            "startOffset": 0,
+            "offsetX": 2038,
+            "offsetY": 550,
+            "hRatio": 2.8500008583068849
+        }
+    ]
+}
