@@ -75,14 +75,14 @@ public class ImageAnalysis : MonoBehaviour
         UnityEngine.Debug.Log($"data값 : {data.offsetX} , {data.offsetY}"  );
         OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(data.offsetX, data.offsetY, boxSize, (int)cropY);
         Mat cropped;
-        if (useNameImage)
-        {
-            cropped = new Mat(nameImage, cropRect).clone();
-        }
-        else
-        {
+        //if (useNameImage)
+        //{
+        //    cropped = new Mat(nameImage, cropRect).clone();
+        //}
+        //else
+        //{
+        //}
             cropped = new Mat(inputImage, cropRect).clone();
-        }
         Core.flip(cropped, cropped, 0); // X축 기준 좌우 반전
         return cropped;
 

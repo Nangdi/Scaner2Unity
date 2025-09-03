@@ -56,7 +56,7 @@ public class ArUcoMarkerDetector : MonoBehaviour
         //마커 4개인식못할시 리턴
         if (ids.total() < 4)
         {
-            //Debug.LogWarning("마커가 4개 미만입니다.");
+            Debug.LogWarning("마커가 4개 미만입니다.");
             return null;
         }
 

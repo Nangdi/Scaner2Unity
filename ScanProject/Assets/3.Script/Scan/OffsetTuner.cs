@@ -90,15 +90,15 @@ public class OffsetTuner : ImageAnalysis
         float cropY = cropSize / hRatio;
         OpenCVForUnity.CoreModule.Rect cropRect = new OpenCVForUnity.CoreModule.Rect(x, y, cropSize, (int)cropY);
         Mat cropped;
-        if (isCropName)
-        {
-            cropped = new Mat(nameImage, cropRect).clone();
-        }
-        else
-        {
-            cropped = new Mat(scannedMat, cropRect).clone();
-        }
+        //if (isCropName)
+        //{
+        //    cropped = new Mat(nameImage, cropRect).clone();
+        //}
+        //else
+        //{
+        //}
 
+            cropped = new Mat(scannedMat, cropRect).clone();
 
 
         Core.flip(cropped, cropped, 0); // X축 기준 좌우 반전
