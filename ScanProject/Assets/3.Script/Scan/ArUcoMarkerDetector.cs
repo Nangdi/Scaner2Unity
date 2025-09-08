@@ -104,9 +104,11 @@ public class ArUcoMarkerDetector : MonoBehaviour
         List<Point> ordered = OrderPointsClockwise(centerPoints);
         Vector2 ratio = CalculateMarkerQuadAspectRatio(ordered[0], ordered[1], ordered[2], ordered[3]);
         // 6. 보정 대상 좌표 정의 (A4 비율)
-        int width = (int)ratio.x;
-        int height = (int)ratio.y;
-        Debug.Log("w : h = " + width + " : " + height);
+        //int width = (int)ratio.x;
+        //int height = (int)ratio.y;
+        //Debug.Log("w : h = " + width + " : " + height);
+        int width = 2027;
+        int height = 1353;
         MatOfPoint2f src = new MatOfPoint2f(ordered.ToArray());
         MatOfPoint2f dst = new MatOfPoint2f(
             new Point(0, 0),

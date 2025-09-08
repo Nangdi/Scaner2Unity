@@ -10,18 +10,18 @@
         },
         {
             "objectID": 1,
-            "cropSize": 1404,
+            "cropSize": 1399,
             "startOffset": 0,
-            "offsetX": 825,
-            "offsetY": 428,
+            "offsetX": 816,
+            "offsetY": 420,
             "hRatio": 1.0
         },
         {
             "objectID": 2,
-            "cropSize": 1410,
+            "cropSize": 1394,
             "startOffset": 0,
-            "offsetX": 845,
-            "offsetY": 377,
+            "offsetX": 840,
+            "offsetY": 379,
             "hRatio": 1.0
         },
         {
