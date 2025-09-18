@@ -69,9 +69,9 @@ public class CustomJsonManager : JsonManager
         dataList = new List<ObjectScanData>()
         {
             new ObjectScanData { objectID = 0, cropSize = 1975, startOffset = 0, offsetX = 0, offsetY = 0, hRatio =1f},
-            new ObjectScanData { objectID = 1, cropSize = 1350, startOffset = 0, offsetX = 695, offsetY = 82, hRatio =1f},
-            new ObjectScanData { objectID = 2, cropSize = 1354, startOffset = 0, offsetX = 713, offsetY = 29, hRatio =1f},
-            new ObjectScanData { objectID = 3, cropSize = 354, startOffset = 0, offsetX = 1787, offsetY = -11, hRatio = 3.85f }
+            new ObjectScanData { objectID = 1, cropSize = 1399, startOffset = 0, offsetX = 816, offsetY = 420, hRatio =1f},
+            new ObjectScanData { objectID = 2, cropSize = 1394, startOffset = 0, offsetX = 840, offsetY = 379, hRatio =1f},
+            new ObjectScanData { objectID = 3, cropSize = 464, startOffset = 0, offsetX = 2038, offsetY = 550, hRatio = 2.85f }
         };
 
     }
